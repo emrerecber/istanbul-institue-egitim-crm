@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Eğitim CRM - Kesin Kayıtlar</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; background:#f8fafc; }
+    .page-header { position: sticky; top: 0; background: #ffffffcc; backdrop-filter: saturate(180%) blur(6px); border-bottom: 1px solid #eef2f7; z-index: 10; }
+    .card { border:1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(16,24,40,.04); }
+    .filter-panel { background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 0.5rem; }
+    .status-confirmed { border-left: 4px solid #28a745; }
+    .status-pending { border-left: 4px solid #ffc107; }
+    .status-cancelled { border-left: 4px solid #dc3545; }
+  </style>
+</head>
+<body>
+  <header class="page-header">
+    <div class="container-fluid py-3 d-flex align-items-center justify-content-between">
+      <div>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-1">
+            <li class="breadcrumb-item"><a href="index.html" class="text-decoration-none">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Kayıt Yönetimi</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Kesin Kayıtlar</li>
+          </ol>
+        </nav>
+        <h1 class="h5 fw-semibold mb-0">Kesin Kayıtlar</h1>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <span class="badge bg-success">156 kesin kayıt</span>
+        <button class="btn btn-success">
+          <i class="fa-solid fa-plus me-2"></i>Yeni Kayıt Ekle
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container-fluid py-3 py-md-4">
+    <!-- Filter Panel -->
+    <div class="card filter-panel mb-4">
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-12 col-md-3">
+            <label class="form-label">🔍 Arama</label>
+            <input type="text" class="form-control" placeholder="Ad, soyad, firma, eğitim">
+          </div>
+          <div class="col-12 col-md-2">
+            <label class="form-label">📅 Başlangıç</label>
+            <input type="date" class="form-control">
+          </div>
+          <div class="col-12 col-md-2">
+            <label class="form-label">📅 Bitiş</label>
+            <input type="date" class="form-control">
+          </div>
+          <div class="col-12 col-md-2">
+            <label class="form-label">🎓 Eğitim</label>
+            <select class="form-select">
+              <option>Tümü</option>
+              <option>Python Programlama</option>
+              <option>Web Tasarım</option>
+              <option>Veri Analizi</option>
+              <option>Proje Yönetimi</option>
+            </select>
+          </div>
+          <div class="col-12 col-md-2">
+            <label class="form-label">📊 Durum</label>
+            <select class="form-select">
+              <option>Tümü</option>
+              <option>Onaylandı</option>
+              <option>Beklemede</option>
+              <option>İptal Edildi</option>
+            </select>
+          </div>
+          <div class="col-12 col-md-1 d-flex align-items-end">
+            <div class="btn-group w-100">
+              <button class="btn btn-primary">🔍 Filtrele</button>
+              <button class="btn btn-outline-secondary">🔄 Temizle</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cards View -->
+    <div class="row g-3">
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="card status-confirmed">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <div>
+                <h6 class="card-title mb-1">Ahmet YILMAZ</h6>
+                <p class="text-muted small mb-0">ABC Teknoloji Ltd.</p>
+              </div>
+              <span class="badge text-bg-success">Onaylandı</span>
+            </div>
+            <div class="mb-3">
+              <small class="text-muted">🎓 Eğitim:</small>
+              <div class="fw-semibold">Python Programlama</div>
+            </div>
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <small class="text-muted">📅 Başlangıç:</small>
+                <div class="fw-semibold">15.01.2025</div>
+              </div>
+              <div class="col-6">
+                <small class="text-muted">💰 Ücret:</small>
+                <div class="fw-semibold">₺2,500</div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <small class="text-muted">📞 İletişim:</small>
+              <div class="fw-semibold">0212 xxx xx xx</div>
+            </div>
+            <div class="d-flex gap-2">
+              <button class="btn btn-outline-primary btn-sm flex-fill">👁️ Detay</button>
+              <button class="btn btn-outline-success btn-sm flex-fill">📧 Email</button>
+              <button class="btn btn-outline-warning btn-sm flex-fill">📝 Not</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="card status-pending">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <div>
+                <h6 class="card-title mb-1">Ayşe DEMİR</h6>
+                <p class="text-muted small mb-0">XYZ Eğitim A.Ş.</p>
+              </div>
+              <span class="badge text-bg-warning">Beklemede</span>
+            </div>
+            <div class="mb-3">
+              <small class="text-muted">🎓 Eğitim:</small>
+              <div class="fw-semibold">Web Tasarım</div>
+            </div>
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <small class="text-muted">📅 Başlangıç:</small>
+                <div class="fw-semibold">20.02.2025</div>
+              </div>
+              <div class="col-6">
+                <small class="text-muted">💰 Ücret:</small>
+                <div class="fw-semibold">₺1,800</div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <small class="text-muted">📞 İletişim:</small>
+              <div class="fw-semibold">0216 xxx xx xx</div>
+            </div>
+            <div class="d-flex gap-2">
+              <button class="btn btn-outline-primary btn-sm flex-fill">👁️ Detay</button>
+              <button class="btn btn-outline-success btn-sm flex-fill">✅ Onayla</button>
+              <button class="btn btn-outline-danger btn-sm flex-fill">❌ İptal</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="card status-cancelled">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <div>
+                <h6 class="card-title mb-1">Mehmet KAYA</h6>
+                <p class="text-muted small mb-0">DEF Sağlık Hiz.</p>
+              </div>
+              <span class="badge text-bg-danger">İptal Edildi</span>
+            </div>
+            <div class="mb-3">
+              <small class="text-muted">🎓 Eğitim:</small>
+              <div class="fw-semibold">Veri Analizi</div>
+            </div>
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <small class="text-muted">📅 Başlangıç:</small>
+                <div class="fw-semibold">10.03.2025</div>
+              </div>
+              <div class="col-6">
+                <small class="text-muted">💰 Ücret:</small>
+                <div class="fw-semibold">₺3,200</div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <small class="text-muted">📞 İletişim:</small>
+              <div class="fw-semibold">0214 xxx xx xx</div>
+            </div>
+            <div class="d-flex gap-2">
+              <button class="btn btn-outline-primary btn-sm flex-fill">👁️ Detay</button>
+              <button class="btn btn-outline-secondary btn-sm flex-fill">🔄 Yeniden Aktif</button>
+              <button class="btn btn-outline-danger btn-sm flex-fill">🗑️ Sil</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="row mt-4">
+      <div class="col-12">
+        <nav aria-label="Sayfa navigasyonu">
+          <ul class="pagination justify-content-center">
+            <li class="page-item disabled">
+              <a class="page-link" href="#" tabindex="-1">Önceki</a>
+            </li>
+            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+              <a class="page-link" href="#">Sonraki</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="navigation.js"></script>
+</body>
+</html>
+

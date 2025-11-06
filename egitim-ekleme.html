@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Eğitim CRM - Eğitim Ekleme</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; background:#f8fafc; }
+    .page-header { position: sticky; top: 0; background: #ffffffcc; backdrop-filter: saturate(180%) blur(6px); border-bottom: 1px solid #eef2f7; z-index: 10; }
+    .card { border:1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(16,24,40,.04); }
+    .form-section { border: 1px solid #e5e7eb; border-radius: 0.5rem; margin-bottom: 1rem; }
+    .form-section-header { background: #f8fafc; padding: 1rem; border-bottom: 1px solid #e5e7eb; border-radius: 0.5rem 0.5rem 0 0; }
+    .form-section-body { padding: 1rem; }
+  </style>
+</head>
+<body>
+  <header class="page-header">
+    <div class="container-fluid py-3 d-flex align-items-center justify-content-between">
+      <div>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-1">
+            <li class="breadcrumb-item"><a href="index.html" class="text-decoration-none">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Eğitim Yönetimi</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Eğitim Ekleme</li>
+          </ol>
+        </nav>
+        <h1 class="h5 fw-semibold mb-0">Yeni Eğitim Programı Ekle</h1>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <button class="btn btn-outline-secondary">
+          <i class="fa-solid fa-arrow-left me-2"></i>Geri Dön
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container-fluid py-3 py-md-4">
+    <div class="row">
+      <div class="col-12 col-lg-8">
+        <!-- Basic Information -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <h6 class="mb-0">TEMEL BİLGİLER</h6>
+          </div>
+          <div class="form-section-body">
+            <div class="row g-3">
+              <div class="col-12 col-md-6">
+                <label class="form-label">Eğitim Adı *</label>
+                <input type="text" class="form-control" placeholder="Python Programlama">
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label">Eğitim Kodu *</label>
+                <input type="text" class="form-control" placeholder="PYT-001">
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label">Kategori *</label>
+                <select class="form-select">
+                  <option>Seçiniz</option>
+                  <option>Programlama</option>
+                  <option>Web Tasarım</option>
+                  <option>Veri Analizi</option>
+                  <option>Proje Yönetimi</option>
+                  <option>Dijital Pazarlama</option>
+                </select>
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label">Seviye *</label>
+                <select class="form-select">
+                  <option>Seçiniz</option>
+                  <option>Başlangıç</option>
+                  <option>Orta</option>
+                  <option>İleri</option>
+                  <option>Uzman</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <label class="form-label">Eğitim Açıklaması *</label>
+                <textarea class="form-control" rows="3" placeholder="Eğitim hakkında detaylı açıklama"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Schedule Information -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <h6 class="mb-0">PROGRAM BİLGİLERİ</h6>
+          </div>
+          <div class="form-section-body">
+            <div class="row g-3">
+              <div class="col-12 col-md-4">
+                <label class="form-label">Başlangıç Tarihi *</label>
+                <input type="date" class="form-control">
+              </div>
+              <div class="col-12 col-md-4">
+                <label class="form-label">Bitiş Tarihi *</label>
+                <input type="date" class="form-control">
+              </div>
+              <div class="col-12 col-md-4">
+                <label class="form-label">Toplam Süre (Saat) *</label>
+                <input type="number" class="form-control" placeholder="40">
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label">Haftalık Ders Saati</label>
+                <input type="number" class="form-control" placeholder="8">
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label">Ders Günleri</label>
+                <div class="form-check-group">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="monday">
+                    <label class="form-check-label" for="monday">Pazartesi</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="tuesday">
+                    <label class="form-check-label" for="tuesday">Salı</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="wednesday">
+                    <label class="form-check-label" for="wednesday">Çarşamba</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="thursday">
+                    <label class="form-check-label" for="thursday">Perşembe</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="friday">
+                    <label class="form-check-label" for="friday">Cuma</label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label">Ders Saatleri</label>
+                <div class="row g-2">
+                  <div class="col-6">
+                    <input type="time" class="form-control" placeholder="Başlangıç">
+                  </div>
+                  <div class="col-6">
+                    <input type="time" class="form-control" placeholder="Bitiş">
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label">Eğitim Yeri</label>
+                <select class="form-select">
+                  <option>Seçiniz</option>
+                  <option>Ana Kampüs - A Sınıfı</option>
+                  <option>Ana Kampüs - B Sınıfı</option>
+                  <option>Şube - Kadıköy</option>
+                  <option>Online</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pricing Information -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <h6 class="mb-0">FİYATLANDIRMA</h6>
+          </div>
+          <div class="form-section-body">
+            <div class="row g-3">
+              <div class="col-12 col-md-6">
+                <label class="form-label">Eğitim Ücreti *</label>
+                <div class="input-group">
+                  <input type="number" class="form-control" placeholder="2500" step="0.01">
+                  <span class="input-group-text">₺</span>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label">Erken Kayıt İndirimi</label>
+                <div class="input-group">
+                  <input type="number" class="form-control" placeholder="10" step="0.01">
+                  <span class="input-group-text">%</span>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label">Grup İndirimi</label>
+                <div class="input-group">
+                  <input type="number" class="form-control" placeholder="15" step="0.01">
+                  <span class="input-group-text">%</span>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label">Maksimum Katılımcı</label>
+                <input type="number" class="form-control" placeholder="20">
+              </div>
+              <div class="col-12">
+                <label class="form-label">Ödeme Koşulları</label>
+                <textarea class="form-control" rows="2" placeholder="Ödeme koşulları ve taksit seçenekleri"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Content Information -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <h6 class="mb-0">EĞİTİM İÇERİĞİ</h6>
+          </div>
+          <div class="form-section-body">
+            <div class="row g-3">
+              <div class="col-12">
+                <label class="form-label">Eğitim Hedefleri</label>
+                <textarea class="form-control" rows="3" placeholder="Bu eğitimi tamamlayan katılımcılar..."></textarea>
+              </div>
+              <div class="col-12">
+                <label class="form-label">Eğitim İçeriği</label>
+                <textarea class="form-control" rows="4" placeholder="1. Hafta: Temel Python kavramları&#10;2. Hafta: Veri yapıları&#10;3. Hafta: Fonksiyonlar&#10;..."></textarea>
+              </div>
+              <div class="col-12">
+                <label class="form-label">Ön Gereksinimler</label>
+                <textarea class="form-control" rows="2" placeholder="Temel bilgisayar kullanımı, matematik bilgisi..."></textarea>
+              </div>
+              <div class="col-12">
+                <label class="form-label">Sertifika Bilgisi</label>
+                <textarea class="form-control" rows="2" placeholder="Eğitimi başarıyla tamamlayan katılımcılara sertifika verilecektir."></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-lg-4">
+        <!-- Quick Actions -->
+        <div class="card">
+          <div class="card-header">
+            <h6 class="mb-0">HIZLI İŞLEMLER</h6>
+          </div>
+          <div class="card-body">
+            <div class="d-grid gap-2">
+              <button class="btn btn-outline-primary">
+                <i class="fa-solid fa-copy me-2"></i>Mevcut Eğitimden Kopyala
+              </button>
+              <button class="btn btn-outline-primary">
+                <i class="fa-solid fa-file-import me-2"></i>Şablondan Oluştur
+              </button>
+              <button class="btn btn-outline-primary">
+                <i class="fa-solid fa-calendar me-2"></i>Takvime Ekle
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form Summary -->
+        <div class="card mt-3">
+          <div class="card-header">
+            <h6 class="mb-0">FORM ÖZETİ</h6>
+          </div>
+          <div class="card-body">
+            <div class="list-group list-group-flush">
+              <div class="list-group-item d-flex justify-content-between">
+                <span>Zorunlu Alanlar:</span>
+                <span class="badge text-bg-warning">8</span>
+              </div>
+              <div class="list-group-item d-flex justify-content-between">
+                <span>Doldurulan Alanlar:</span>
+                <span class="badge text-bg-success">0</span>
+              </div>
+              <div class="list-group-item d-flex justify-content-between">
+                <span>Form Durumu:</span>
+                <span class="badge text-bg-danger">Eksik</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Preview -->
+        <div class="card mt-3">
+          <div class="card-header">
+            <h6 class="mb-0">ÖNİZLEME</h6>
+          </div>
+          <div class="card-body">
+            <div class="text-center">
+              <i class="fa-solid fa-eye fa-2x text-muted mb-3"></i>
+              <p class="text-muted small">Form dolduruldukça önizleme burada görünecek</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="row mt-4">
+      <div class="col-12">
+        <div class="d-flex gap-2 justify-content-end">
+          <button class="btn btn-outline-secondary">
+            <i class="fa-solid fa-save me-2"></i>TASLAK KAYDET
+          </button>
+          <button class="btn btn-outline-danger">
+            <i class="fa-solid fa-times me-2"></i>İPTAL
+          </button>
+          <button class="btn btn-success">
+            <i class="fa-solid fa-check me-2"></i>KAYDET
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="navigation.js"></script>
+</body>
+</html>
+

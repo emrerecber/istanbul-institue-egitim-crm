@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Eğitim CRM - Dashboard</title>
+  <!-- Bootstrap 5.3 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <!-- Font Awesome 6 -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="common-styles.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-600: #2563eb; /* mavi */
+      --success-600: #16a34a; /* yeşil */
+      --warning-600: #f59e0b; /* turuncu */
+      --sidebar-bg: #0f172a; /* slate-900 */
+      --sidebar-hover: #111827;
+      --card-border: #e5e7eb;
+      --muted: #6b7280;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji';
+      background: #f8fafc;
+      color: #0f172a;
+    }
+
+    /* Layout */
+    .app-wrapper { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+    .app-sidebar { background: var(--sidebar-bg); color: #e2e8f0; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .app-content { display: flex; flex-direction: column; min-width: 0; }
+
+    /* Sidebar */
+    .brand { display: flex; align-items: center; gap: .75rem; padding: 1rem 1.25rem; border-bottom: 1px solid rgba(255,255,255,.08); }
+    .brand .logo { width: 36px; height: 36px; display: grid; place-items: center; background: rgba(37,99,235,.2); color: #93c5fd; border-radius: .75rem; }
+    .brand .title { font-weight: 700; letter-spacing: .3px; }
+
+    .nav-section-title { padding: .75rem 1.25rem; font-size: .75rem; text-transform: uppercase; color: #9ca3af; letter-spacing: .6px; }
+    .nav-link { color: #e5e7eb; padding: .625rem 1.25rem; display: flex; align-items: center; gap: .75rem; border-radius: .5rem; margin: .125rem .75rem; text-decoration: none; transition: background .2s ease, color .2s ease; }
+    .nav-link:hover { background: rgba(255,255,255,.06); color: #fff; }
+    .nav-link .chev { margin-left: auto; opacity: .7; }
+
+    .submenu { 
+      max-height: 0; 
+      overflow: hidden; 
+      transition: max-height 0.3s ease; 
+    }
+    .submenu.open { 
+      max-height: 500px; 
+    }
+    .submenu a { 
+      color: #cbd5e1; 
+      padding: .5rem 2.75rem; 
+      display: block; 
+      border-radius: .5rem; 
+      margin: .125rem .75rem; 
+      text-decoration: none; 
+    }
+    .submenu a:hover { 
+      background: rgba(255,255,255,.05); 
+      color: #fff; 
+    }
+
+    /* Header */
+    .app-header { position: sticky; top: 0; z-index: 10; background: #ffffffcc; backdrop-filter: saturate(180%) blur(6px); border-bottom: 1px solid #eef2f7; }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; padding: .75rem 1rem; }
+    .hamburger { border: 1px solid #e5e7eb; background: #fff; border-radius: .5rem; width: 40px; height: 40px; display: grid; place-items: center; }
+    .user-badge { display: flex; align-items: center; gap: .75rem; }
+    .user-avatar { width: 36px; height: 36px; border-radius: 50%; background: #e2e8f0; display: grid; place-items: center; color: #475569; font-weight: 600; }
+
+    /* Cards */
+    .card { border: 1px solid var(--card-border); box-shadow: 0 1px 2px rgba(16,24,40,.04); }
+    .card-hover { transition: transform .15s ease, box-shadow .15s ease; }
+    .card-hover:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(16,24,40,.08); }
+    .kpi { position: relative; overflow: hidden; }
+    .kpi .icon-badge { position: absolute; right: .75rem; top: .75rem; opacity: .15; font-size: 56px; }
+    .trend { font-size: .875rem; font-weight: 600; }
+    .trend.up { color: var(--success-600); }
+    .trend.down { color: #ef4444; }
+
+    /* Quick actions */
+    .btn-action { display: flex; align-items: center; gap: .5rem; padding: .75rem 1rem; font-weight: 600; }
+
+    /* Skeleton */
+    .skeleton { position: relative; overflow: hidden; background: #e5e7eb; border-radius: .5rem; }
+    .skeleton::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, rgba(255,255,255,.6), transparent); animation: shimmer 1.25s infinite; }
+    @keyframes shimmer { 100% { transform: translateX(100%); } }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+      .app-wrapper { grid-template-columns: 1fr; }
+      .app-sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 280px; transform: translateX(-100%); transition: transform .25s ease; z-index: 1040; }
+      .app-sidebar.open { transform: translateX(0); }
+      .sidebar-backdrop { position: fixed; inset: 0; background: rgba(15,23,42,.45); opacity: 0; visibility: hidden; transition: all .2s ease; z-index: 1030; }
+      .sidebar-backdrop.show { opacity: 1; visibility: visible; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-wrapper">
+    <!-- Sidebar -->
+    <aside class="app-sidebar" id="sidebar">
+      <div class="brand">
+        <div class="logo">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <div class="title">Eğitim CRM</div>
+      </div>
+
+      <nav class="py-2">
+        <div class="nav-section">
+          <a href="#" class="nav-link" data-nav="dashboard">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Dashboard</span>
+          </a>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Kişi Yönetimi</div>
+          <a class="nav-link nav-collapsible" data-target="#kisiler">
+            <i class="fa-solid fa-users"></i>
+            <span>Kişi Yönetimi</span>
+            <i class="fa-solid fa-chevron-down chev"></i>
+          </a>
+          <div class="submenu" id="kisiler">
+            <div>
+              <a href="kisi-listesi.html">Kişi Listesi</a>
+              <a href="kisi-ekleme.html">Kişi Ekleme</a>
+              <a href="kisi-raporlari.html">Kişi Raporları</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Firma Yönetimi</div>
+          <a class="nav-link nav-collapsible" data-target="#firmalar">
+            <i class="fa-solid fa-building"></i>
+            <span>Firma Yönetimi</span>
+            <i class="fa-solid fa-chevron-down chev"></i>
+          </a>
+          <div class="submenu" id="firmalar">
+            <div>
+              <a href="firma-listesi.html">Firma Listesi</a>
+              <a href="firma-ekleme.html">Firma Ekleme</a>
+              <a href="firma-raporlari.html">Firma Raporları</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Eğitim Yönetimi</div>
+          <a class="nav-link nav-collapsible" data-target="#egitim">
+            <i class="fa-solid fa-chalkboard-user"></i>
+            <span>Eğitim Yönetimi</span>
+            <i class="fa-solid fa-chevron-down chev"></i>
+          </a>
+          <div class="submenu" id="egitim">
+            <div>
+              <a href="egitim-listesi.html">Eğitim Listesi</a>
+              <a href="egitim-ekleme.html">Eğitim Ekleme</a>
+              <a href="egitim-kategorileri.html">Eğitim Kategorileri</a>
+              <a href="egitim-takvimi.html">Eğitim Takvimi</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Kayıt Yönetimi</div>
+          <a class="nav-link nav-collapsible" data-target="#kayit">
+            <i class="fa-solid fa-file-pen"></i>
+            <span>Kayıt Yönetimi</span>
+            <i class="fa-solid fa-chevron-down chev"></i>
+          </a>
+          <div class="submenu" id="kayit">
+            <div>
+              <a href="potansiyel-kayitlar.html">Potansiyel Kayıtlar</a>
+              <a href="kesin-kayitlar.html">Kesin Kayıtlar</a>
+              <a href="kayit-islemleri.html">Kayıt İşlemleri</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Yoklama</div>
+          <a class="nav-link nav-collapsible" data-target="#yoklama">
+            <i class="fa-solid fa-list-check"></i>
+            <span>Yoklama</span>
+            <i class="fa-solid fa-chevron-down chev"></i>
+          </a>
+          <div class="submenu" id="yoklama">
+            <div>
+              <a href="yoklama.html">Günlük Yoklama</a>
+              <a href="yoklama-raporlari.html">Yoklama Raporları</a>
+              <a href="katilim-analizi.html">Katılım Analizi</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Sınav Sistemi</div>
+          <a class="nav-link nav-collapsible" data-target="#sinav">
+            <i class="fa-solid fa-clipboard-question"></i>
+            <span>Sınav Sistemi</span>
+            <i class="fa-solid fa-chevron-down chev"></i>
+          </a>
+          <div class="submenu" id="sinav">
+            <div>
+              <a href="sinavlar.html">Sınav Listesi</a>
+              <a href="soru-bankasi.html">Soru Bankası</a>
+              <a href="sinav-sonuclari.html">Sınav Sonuçları</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Mali İşlemler</div>
+          <a class="nav-link nav-collapsible" data-target="#mali">
+            <i class="fa-solid fa-money-check-dollar"></i>
+            <span>Mali İşlemler</span>
+            <i class="fa-solid fa-chevron-down chev"></i>
+          </a>
+          <div class="submenu" id="mali">
+            <div>
+              <a href="gelirler.html">Gelirler</a>
+              <a href="giderler.html">Giderler</a>
+              <a href="mali-ozet.html">Mali Raporlar</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">İletişim</div>
+          <a class="nav-link nav-collapsible" data-target="#iletisim">
+            <i class="fa-solid fa-bullhorn"></i>
+            <span>İletişim</span>
+            <i class="fa-solid fa-chevron-down chev"></i>
+          </a>
+          <div class="submenu" id="iletisim">
+            <div>
+              <a href="duyurular.html">Duyurular</a>
+              <a href="sms-gonder.html">SMS Gönderimi</a>
+              <a href="email-gonder.html">Email Gönderimi</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Raporlar</div>
+          <a class="nav-link nav-collapsible" data-target="#raporlar">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span>Raporlar</span>
+            <i class="fa-solid fa-chevron-down chev"></i>
+          </a>
+          <div class="submenu" id="raporlar">
+            <div>
+              <a href="mali-raporlar.html">Mali Raporlar</a>
+              <a href="egitim-raporlari.html">Eğitim Raporları</a>
+              <a href="katilimci-raporlari.html">Katılımcı Raporları</a>
+              <a href="performans-raporlari.html">Performans Raporları</a>
+              <a href="ozel-rapor.html">Özel Rapor Oluştur</a>
+              <a href="analitik-dashboard.html">Analitik Dashboard</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Sistem</div>
+          <a class="nav-link nav-collapsible" data-target="#sistem">
+            <i class="fa-solid fa-gear"></i>
+            <span>Sistem</span>
+            <i class="fa-solid fa-chevron-down chev"></i>
+          </a>
+          <div class="submenu" id="sistem">
+            <div>
+              <a href="ayarlar.html">Ayarlar</a>
+              <a href="kullanici-yonetimi.html">Kullanıcılar</a>
+              <a href="yetki-yonetimi.html">Yetki Yönetimi</a>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Content -->
+    <div class="app-content">
+      <!-- Header -->
+      <header class="app-header">
+        <div class="header-inner container-fluid">
+          <div class="d-flex align-items-center gap-2">
+            <button class="hamburger d-lg-none" id="sidebarToggle" aria-label="Menüyü Aç/Kapat">
+              <i class="fa-solid fa-bars"></i>
+            </button>
+            <h1 class="h5 mb-0 fw-semibold">Ana Dashboard</h1>
+          </div>
+          <div class="user-badge">
+            <div class="text-end d-none d-sm-block">
+              <div class="fw-semibold">Admin Kullanıcı</div>
+              <div class="small text-muted">Sistem Yöneticisi</div>
+            </div>
+            <div class="user-avatar" aria-hidden="true">AK</div>
+            <button class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-right-from-bracket me-1"></i> Çıkış</button>
+          </div>
+        </div>
+      </header>
+
+      <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+      <!-- Main -->
+      <main class="container-fluid py-3 py-md-4">
+        <!-- KPI Cards -->
+        <div class="row g-3 g-md-4">
+          <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card card-hover kpi">
+              <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                  <div>
+                    <div class="text-muted small">Toplam Öğrenci</div>
+                    <div class="h4 fw-bold" id="kpiTotalStudents" aria-live="polite">-</div>
+                    <div class="trend up" id="kpiStudentsTrend">↗ %12</div>
+                  </div>
+                  <div class="text-primary-emphasis fs-3"><i class="fa-solid fa-user-graduate"></i></div>
+                </div>
+                <i class="fa-solid fa-user-graduate icon-badge"></i>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card card-hover kpi">
+              <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                  <div>
+                    <div class="text-muted small">Aktif Eğitimler</div>
+                    <div class="h4 fw-bold" id="kpiActiveCourses">-</div>
+                    <div class="trend up" id="kpiCoursesTrend">↗ %5</div>
+                  </div>
+                  <div class="text-success fs-3"><i class="fa-solid fa-book-open"></i></div>
+                </div>
+                <i class="fa-solid fa-book-open icon-badge"></i>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card card-hover kpi">
+              <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                  <div>
+                    <div class="text-muted small">Bu Ay Gelir</div>
+                    <div class="h4 fw-bold" id="kpiRevenue">-</div>
+                    <div class="trend up" id="kpiRevenueTrend">↗ %18</div>
+                  </div>
+                  <div class="text-warning fs-3"><i class="fa-solid fa-coins"></i></div>
+                </div>
+                <i class="fa-solid fa-coins icon-badge"></i>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card card-hover kpi">
+              <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                  <div>
+                    <div class="text-muted small">Bekleyen Kayıtlar</div>
+                    <div class="h4 fw-bold" id="kpiPending">-</div>
+                    <div class="trend down" id="kpiPendingTrend">↘ %3</div>
+                  </div>
+                  <div class="text-danger fs-3"><i class="fa-solid fa-hourglass-half"></i></div>
+                </div>
+                <i class="fa-solid fa-hourglass-half icon-badge"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts and Lists -->
+        <div class="row g-3 g-md-4 mt-1">
+          <div class="col-12 col-xxl-8">
+            <div class="card card-hover h-100">
+              <div class="card-header bg-white d-flex align-items-center justify-content-between">
+                <div class="fw-semibold"><i class="fa-solid fa-chart-column me-2 text-primary"></i> Aylık Satış Grafiği (Son 6 Ay)</div>
+                <div class="small text-muted" id="salesSummary">Yükleniyor...</div>
+              </div>
+              <div class="card-body">
+                <div class="skeleton w-100" style="height:280px" id="salesSkeleton"></div>
+                <canvas id="salesChart" class="w-100" height="100" aria-label="Aylık Satış Grafiği" role="img" hidden></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-xxl-4">
+            <div class="card card-hover h-100">
+              <div class="card-header bg-white fw-semibold"><i class="fa-solid fa-chart-pie me-2 text-warning"></i> Eğitim Kategorileri</div>
+              <div class="card-body">
+                <div class="skeleton w-100" style="height:280px" id="catSkeleton"></div>
+                <canvas id="categoriesChart" height="100" hidden></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-3 g-md-4 mt-1">
+          <div class="col-12 col-xxl-8">
+            <div class="card card-hover h-100">
+              <div class="card-header bg-white fw-semibold d-flex align-items-center justify-content-between">
+                <span><i class="fa-solid fa-list-ul me-2 text-success"></i> Son Kayıtlar</span>
+                <button class="btn btn-sm btn-outline-primary" id="refreshRegistrations"><i class="fa-solid fa-rotate me-1"></i> Yenile</button>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                      <tr>
+                        <th>#</th>
+                        <th>Ad Soyad</th>
+                        <th>Eğitim</th>
+                        <th>Tarih</th>
+                        <th>Durum</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody id="registrationsBody">
+                      <tr>
+                        <td colspan="6">
+                          <div class="skeleton w-100" style="height:36px"></div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-xxl-4">
+            <div class="card card-hover h-100">
+              <div class="card-header bg-white fw-semibold"><i class="fa-solid fa-calendar-day me-2 text-primary"></i> Bugün Başlayan Eğitimler</div>
+              <div class="card-body">
+                <ul class="list-group list-group-flush" id="todaysTrainingsList">
+                  <li class="list-group-item">
+                    <div class="skeleton w-100" style="height:20px"></div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Attendance line chart and Pending tasks -->
+        <div class="row g-3 g-md-4 mt-1">
+          <div class="col-12 col-xxl-8">
+            <div class="card card-hover h-100">
+              <div class="card-header bg-white fw-semibold"><i class="fa-solid fa-chart-line me-2 text-success"></i> Günlük Katılım Oranı (Son 14 Gün)</div>
+              <div class="card-body">
+                <div class="skeleton w-100" style="height:240px" id="attSkeleton"></div>
+                <canvas id="attendanceChart" height="90" hidden></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-xxl-4">
+            <div class="card card-hover h-100">
+              <div class="card-header bg-white fw-semibold"><i class="fa-solid fa-hourglass-half me-2 text-danger"></i> Bekleyen İşlemler</div>
+              <div class="card-body">
+                <ul class="list-group list-group-flush" id="pendingOps">
+                  <li class="list-group-item">
+                    <div class="skeleton w-100" style="height:20px"></div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="row g-3 g-md-4 mt-1">
+          <div class="col-12 col-lg-4">
+            <button class="btn btn-success w-100 btn-action shadow-sm" id="quickAdd">
+              <i class="fa-solid fa-plus"></i> Yeni Kayıt Ekle
+            </button>
+          </div>
+          <div class="col-12 col-lg-4">
+            <button class="btn btn-primary w-100 btn-action shadow-sm" id="quickAttendance">
+              <i class="fa-solid fa-clipboard-check"></i> Yoklama Yap
+            </button>
+          </div>
+          <div class="col-12 col-lg-4">
+            <button class="btn btn-warning w-100 btn-action shadow-sm" id="quickAnnouncement">
+              <i class="fa-solid fa-bullhorn"></i> Duyuru Gönder
+            </button>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080">
+    <div id="liveToast" class="toast align-items-center border-0" role="status" aria-live="polite" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body">
+          İşlem başarılı.
+        </div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Kapat"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dependencies -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="navigation.js"></script>
+
+  <script>
+    // Dummy Data (gerçekçi sayılar)
+    const recentRegistrations = [
+      { id: 1, name: "Ahmet Yılmaz", course: "YTÜ Editörlük Programı", date: "29.09.2025", status: "Kesin Kayıt" },
+      { id: 2, name: "Ayşe Demir", course: "CRM Eğitimi", date: "28.09.2025", status: "Potansiyel" },
+      { id: 3, name: "Mehmet Kaya", course: "Proje Yönetimi", date: "28.09.2025", status: "Kesin Kayıt" },
+      { id: 4, name: "Elif Şahin", course: "Excel İleri Seviye", date: "27.09.2025", status: "Potansiyel" },
+      { id: 5, name: "Caner Koç", course: "Veri Analizi", date: "26.09.2025", status: "Kesin Kayıt" }
+    ];
+
+    const todaysTrainings = [
+      { name: "YTÜ Editörlük Programı", time: "09:00-17:00", participants: 28 },
+      { name: "CRM Sistemi Eğitimi", time: "14:00-18:00", participants: 15 },
+      { name: "Proje Yönetimi", time: "10:00-16:00", participants: 22 }
+    ];
+
+    const kpiData = {
+      totalStudents: 1247,
+      activeCourses: 23,
+      monthlyRevenueTry: 156750,
+      pendingApplications: 47,
+      trends: { students: 12, courses: 5, revenue: 18, pending: -3 }
+    };
+
+    const salesLast6Months = (() => {
+      // Son 6 ay (isimler TR), satışlar (TRY)
+      const now = new Date();
+      const locale = 'tr-TR';
+      const labels = [];
+      const values = [];
+      for (let i = 5; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        labels.push(d.toLocaleDateString(locale, { month: 'short' }));
+        // Basit gerçekçi dağılım
+        values.push(90000 + Math.round(Math.random() * 80000));
+      }
+      return { labels, values };
+    })();
+
+    const categoryBreakdown = [
+      { label: 'Yazılım', value: 38 },
+      { label: 'Yönetim', value: 22 },
+      { label: 'Tasarım', value: 16 },
+      { label: 'Ofis', value: 12 },
+      { label: 'Diğer', value: 12 },
+    ];
+
+    const attendanceLast14Days = (() => {
+      const labels = [];
+      const values = [];
+      const now = new Date();
+      for (let i = 13; i >= 0; i--) {
+        const d = new Date(now);
+        d.setDate(now.getDate() - i);
+        labels.push(d.toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit' }));
+        values.push(60 + Math.round(Math.random() * 35)); // %60 - %95 arası
+      }
+      return { labels, values };
+    })();
+
+    const pendingOperations = [
+      { title: 'Onay Bekleyen Kayıt', detail: 'Ali Vural - CRM Eğitimi', priority: 'Yüksek' },
+      { title: 'Ödeme Kontrolü', detail: 'Proje Yönetimi - 3 kişi', priority: 'Orta' },
+      { title: 'Sınıf Ataması', detail: 'Excel İleri - 2 kişi', priority: 'Düşük' },
+    ];
+
+    // Utilities
+    const formatCurrency = (value) => new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY', maximumFractionDigits: 0 }).format(value);
+    const formatNumber = (value) => new Intl.NumberFormat('tr-TR').format(value);
+
+    // Navigation is handled by navigation.js - no duplicate code needed
+
+    // Populate KPIs
+    function renderKpis() {
+      document.getElementById('kpiTotalStudents').textContent = formatNumber(kpiData.totalStudents) + ' kişi';
+      document.getElementById('kpiActiveCourses').textContent = formatNumber(kpiData.activeCourses) + ' program';
+      document.getElementById('kpiRevenue').textContent = formatCurrency(kpiData.monthlyRevenueTry);
+      document.getElementById('kpiPending').textContent = formatNumber(kpiData.pendingApplications) + ' başvuru';
+
+      const st = document.getElementById('kpiStudentsTrend');
+      const ct = document.getElementById('kpiCoursesTrend');
+      const rt = document.getElementById('kpiRevenueTrend');
+      const pt = document.getElementById('kpiPendingTrend');
+      st.textContent = (kpiData.trends.students >= 0 ? '↗ ' : '↘ ') + '%' + Math.abs(kpiData.trends.students);
+      ct.textContent = (kpiData.trends.courses >= 0 ? '↗ ' : '↘ ') + '%' + Math.abs(kpiData.trends.courses);
+      rt.textContent = (kpiData.trends.revenue >= 0 ? '↗ ' : '↘ ') + '%' + Math.abs(kpiData.trends.revenue);
+      pt.textContent = (kpiData.trends.pending >= 0 ? '↗ ' : '↘ ') + '%' + Math.abs(kpiData.trends.pending);
+      if (kpiData.trends.pending >= 0) { pt.classList.remove('down'); pt.classList.add('up'); } else { pt.classList.remove('up'); pt.classList.add('down'); }
+    }
+
+    // Render lists
+    function renderRegistrations(list) {
+      const tbody = document.getElementById('registrationsBody');
+      tbody.innerHTML = '';
+      list.slice(0, 5).forEach((rec) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${rec.id}</td>
+          <td>${rec.name}</td>
+          <td>${rec.course}</td>
+          <td>${rec.date}</td>
+          <td>
+            <span class="badge ${rec.status === 'Kesin Kayıt' ? 'text-bg-success' : 'text-bg-warning'}">${rec.status}</span>
+          </td>
+          <td class="text-end">
+            <button class="btn btn-sm btn-outline-secondary"><i class="fa-solid fa-magnifying-glass"></i> Detay</button>
+          </td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderTodaysTrainings(list) {
+      const ul = document.getElementById('todaysTrainingsList');
+      ul.innerHTML = '';
+      list.slice(0, 3).forEach(item => {
+        const li = document.createElement('li');
+        li.className = 'list-group-item d-flex justify-content-between align-items-center';
+        li.innerHTML = `
+          <div>
+            <div class="fw-semibold">${item.name}</div>
+            <div class="text-muted small"><i class="fa-regular fa-clock me-1"></i>${item.time}</div>
+          </div>
+          <span class="badge rounded-pill text-bg-primary"><i class="fa-solid fa-user me-1"></i>${item.participants}</span>`;
+        ul.appendChild(li);
+      });
+    }
+
+    function renderPendingOps(items) {
+      const ul = document.getElementById('pendingOps');
+      ul.innerHTML = '';
+      items.forEach(it => {
+        const li = document.createElement('li');
+        li.className = 'list-group-item d-flex justify-content-between align-items-center';
+        li.innerHTML = `
+          <div>
+            <div class="fw-semibold">${it.title}</div>
+            <div class="text-muted small">${it.detail}</div>
+          </div>
+          <span class="badge ${it.priority === 'Yüksek' ? 'text-bg-danger' : it.priority === 'Orta' ? 'text-bg-warning' : 'text-bg-secondary'}">${it.priority}</span>`;
+        ul.appendChild(li);
+      });
+    }
+
+    // Charts
+    let salesChart, categoriesChart, attendanceChart;
+    function mountSalesChart() {
+      const ctx = document.getElementById('salesChart');
+      const total = salesLast6Months.values.reduce((a,b)=>a+b,0);
+      document.getElementById('salesSummary').textContent = `Toplam: ${formatCurrency(total)}`;
+      salesChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: salesLast6Months.labels,
+          datasets: [{
+            label: 'Satış (TL)',
+            data: salesLast6Months.values,
+            borderRadius: 8,
+            backgroundColor: 'rgba(37,99,235,.8)'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: { y: { ticks: { callback: (v) => new Intl.NumberFormat('tr-TR', { style:'currency', currency:'TRY', maximumFractionDigits:0 }).format(v) } } },
+          plugins: { legend: { display: false }, tooltip: { callbacks: { label: (ctx) => formatCurrency(ctx.parsed.y) } } }
+        }
+      });
+      document.getElementById('salesSkeleton').hidden = true;
+      ctx.hidden = false;
+    }
+
+    function mountCategoriesChart() {
+      const ctx = document.getElementById('categoriesChart');
+      categoriesChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: categoryBreakdown.map(c=>c.label),
+          datasets: [{
+            data: categoryBreakdown.map(c=>c.value),
+            backgroundColor: ['#2563eb','#16a34a','#f59e0b','#06b6d4','#94a3b8']
+          }]
+        },
+        options: { plugins: { legend: { position: 'bottom' } } }
+      });
+      document.getElementById('catSkeleton').hidden = true;
+      ctx.hidden = false;
+    }
+
+    function mountAttendanceChart() {
+      const ctx = document.getElementById('attendanceChart');
+      attendanceChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: attendanceLast14Days.labels,
+          datasets: [{
+            label: 'Katılım %',
+            data: attendanceLast14Days.values,
+            fill: false,
+            borderColor: '#16a34a',
+            backgroundColor: '#16a34a',
+            tension: .3,
+            pointRadius: 3,
+            pointHoverRadius: 5
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: { y: { min: 50, max: 100, ticks: { callback: (v)=> v + '%' } } },
+          plugins: { legend: { display: false } }
+        }
+      });
+      document.getElementById('attSkeleton').hidden = true;
+      ctx.hidden = false;
+    }
+
+    // Quick actions (toasts)
+    function showToast(message, style = 'primary') {
+      const toastEl = document.getElementById('liveToast');
+      toastEl.classList.remove('text-bg-primary','text-bg-success','text-bg-warning');
+      toastEl.classList.add(`text-bg-${style}`);
+      toastEl.querySelector('.toast-body').textContent = message;
+      const toast = new bootstrap.Toast(toastEl, { delay: 2000 });
+      toast.show();
+    }
+
+    document.getElementById('quickAdd').addEventListener('click', () => showToast('Yeni kayıt formu açılıyor...', 'success'));
+    document.getElementById('quickAttendance').addEventListener('click', () => showToast('Yoklama ekranına yönlendiriliyor...', 'primary'));
+    document.getElementById('quickAnnouncement').addEventListener('click', () => showToast('Duyuru gönderim modülü yükleniyor...', 'warning'));
+
+    document.getElementById('refreshRegistrations').addEventListener('click', () => {
+      showToast('Son kayıtlar güncellendi', 'primary');
+      renderRegistrations(recentRegistrations);
+    });
+
+    // Init
+    window.addEventListener('DOMContentLoaded', () => {
+      renderKpis();
+      renderRegistrations(recentRegistrations);
+      renderTodaysTrainings(todaysTrainings);
+      renderPendingOps(pendingOperations);
+
+      // Simüle yükleme gecikmesi
+      setTimeout(() => { mountSalesChart(); }, 600);
+      setTimeout(() => { mountCategoriesChart(); }, 800);
+      setTimeout(() => { mountAttendanceChart(); }, 700);
+    });
+  </script>
+</body>
+</html>
+
+

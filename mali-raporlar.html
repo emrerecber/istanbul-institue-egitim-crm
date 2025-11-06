@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Eğitim CRM - Mali Raporlar</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; background:#f8fafc; }
+    .page-header { position: sticky; top: 0; background: #ffffffcc; backdrop-filter: saturate(180%) blur(6px); border-bottom: 1px solid #eef2f7; z-index: 10; }
+    .card { border:1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(16,24,40,.04); }
+    .chart-container { height: 300px; position: relative; }
+    .summary-card { border-left: 4px solid #3b82f6; }
+    .summary-card.positive { border-left-color: #22c55e; }
+    .summary-card.negative { border-left-color: #ef4444; }
+    .trend-up { color: #22c55e; }
+    .trend-down { color: #ef4444; }
+  </style>
+</head>
+<body>
+  <header class="page-header">
+    <div class="container-fluid py-3 d-flex align-items-center justify-content-between">
+      <div>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-1">
+            <li class="breadcrumb-item"><a href="index.html" class="text-decoration-none">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="raporlar.html" class="text-decoration-none">Raporlar</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Mali Raporlar</li>
+          </ol>
+        </nav>
+        <h1 class="h5 fw-semibold mb-0">Mali Raporlar</h1>
+      </div>
+    </div>
+  </header>
+
+  <main class="container-fluid py-3 py-md-4">
+    <!-- Report Filters -->
+    <div class="card mb-4">
+      <div class="card-header">
+        <h6 class="mb-0">MALİ RAPOR FİLTRELERİ</h6>
+      </div>
+      <div class="card-body">
+        <form id="reportFilters" class="row g-3">
+          <div class="col-12">
+            <label class="form-label">Rapor Tipi:</label>
+            <div class="d-flex gap-3 flex-wrap">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="reportType" value="income-expense" id="incomeExpense" checked>
+                <label class="form-check-label" for="incomeExpense">Gelir-Gider Karşılaştırma</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="reportType" value="profit-loss" id="profitLoss">
+                <label class="form-check-label" for="profitLoss">Kar-Zarar Analizi</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="reportType" value="payment-status" id="paymentStatus">
+                <label class="form-check-label" for="paymentStatus">Ödeme Durumu</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="reportType" value="collection" id="collection">
+                <label class="form-check-label" for="collection">Tahsilat Raporu</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="reportType" value="category" id="category">
+                <label class="form-check-label" for="category">Kategori Bazlı Gelir/Gider</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-4">
+            <label class="form-label">Tarih Aralığı:</label>
+            <div class="row g-2">
+              <div class="col-6">
+                <input type="date" class="form-control" id="startDate" value="2025-09-01">
+              </div>
+              <div class="col-6">
+                <input type="date" class="form-control" id="endDate" value="2025-09-30">
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-4">
+            <label class="form-label">Preset'ler:</label>
+            <div class="d-flex gap-1 flex-wrap">
+              <button type="button" class="btn btn-outline-secondary btn-sm" data-preset="thisMonth">Bu Ay</button>
+              <button type="button" class="btn btn-outline-secondary btn-sm" data-preset="lastMonth">Geçen Ay</button>
+              <button type="button" class="btn btn-outline-secondary btn-sm" data-preset="thisYear">Bu Yıl</button>
+              <button type="button" class="btn btn-outline-secondary btn-sm" data-preset="lastYear">Geçen Yıl</button>
+              <button type="button" class="btn btn-outline-secondary btn-sm" data-preset="last6Months">Son 6 Ay</button>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-4">
+            <label class="form-label">Gruplandırma:</label>
+            <div class="d-flex gap-2 flex-wrap">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="grouping" value="daily" id="daily">
+                <label class="form-check-label" for="daily">Günlük</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="grouping" value="weekly" id="weekly">
+                <label class="form-check-label" for="weekly">Haftalık</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="grouping" value="monthly" id="monthly" checked>
+                <label class="form-check-label" for="monthly">Aylık</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="grouping" value="yearly" id="yearly">
+                <label class="form-check-label" for="yearly">Yıllık</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="comparePrevious" checked>
+              <label class="form-check-label" for="comparePrevious">Önceki dönemle karşılaştır</label>
+            </div>
+          </div>
+
+          <div class="col-12 d-flex gap-2">
+            <button type="submit" class="btn btn-primary">🔍 RAPOR OLUŞTUR</button>
+            <button type="button" class="btn btn-outline-secondary" id="downloadPdf">📄 PDF İndir</button>
+            <button type="button" class="btn btn-outline-success" id="downloadExcel">📥 Excel İndir</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Report Results -->
+    <div id="reportResults">
+      <!-- Summary Cards -->
+      <div class="row g-3 mb-4">
+        <div class="col-12 col-md-3">
+          <div class="card summary-card positive">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="text-muted small">Toplam Gelir</div>
+                  <div class="h4 mb-0">1,247,500 ₺</div>
+                  <div class="small trend-up">↗ %18.5</div>
+                </div>
+                <div class="text-success">
+                  <i class="fa-solid fa-arrow-trend-up fa-2x"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-3">
+          <div class="card summary-card negative">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="text-muted small">Toplam Gider</div>
+                  <div class="h4 mb-0">385,200 ₺</div>
+                  <div class="small trend-up">↗ %12.3</div>
+                </div>
+                <div class="text-danger">
+                  <i class="fa-solid fa-arrow-trend-down fa-2x"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-3">
+          <div class="card summary-card positive">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="text-muted small">Net Kar</div>
+                  <div class="h4 mb-0">862,300 ₺</div>
+                  <div class="small trend-up">↗ %21.4</div>
+                </div>
+                <div class="text-success">
+                  <i class="fa-solid fa-chart-line fa-2x"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-3">
+          <div class="card summary-card positive">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="text-muted small">Kar Marjı</div>
+                  <div class="h4 mb-0">%69.1</div>
+                  <div class="small trend-up">↗ %3.2</div>
+                </div>
+                <div class="text-info">
+                  <i class="fa-solid fa-percentage fa-2x"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chart -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h6 class="mb-0">AYLIK KARŞILAŞTIRMA (Çubuk Grafik)</h6>
+        </div>
+        <div class="card-body">
+          <div class="chart-container">
+            <canvas id="incomeExpenseChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detailed Table -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h6 class="mb-0">DETAYLI TABLO</h6>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead class="table-light">
+                <tr>
+                  <th>Ay</th>
+                  <th>Gelir</th>
+                  <th>Gider</th>
+                  <th>Kar</th>
+                  <th>Marj</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Ocak</td>
+                  <td>982,000₺</td>
+                  <td>412,000₺</td>
+                  <td>570,000₺</td>
+                  <td>%58.0</td>
+                </tr>
+                <tr>
+                  <td>Şubat</td>
+                  <td>1,125,000₺</td>
+                  <td>438,000₺</td>
+                  <td>687,000₺</td>
+                  <td>%61.1</td>
+                </tr>
+                <tr>
+                  <td>Mart</td>
+                  <td>1,256,000₺</td>
+                  <td>445,000₺</td>
+                  <td>811,000₺</td>
+                  <td>%64.6</td>
+                </tr>
+                <tr>
+                  <td>Nisan</td>
+                  <td>1,142,000₺</td>
+                  <td>421,000₺</td>
+                  <td>721,000₺</td>
+                  <td>%63.1</td>
+                </tr>
+                <tr>
+                  <td>Mayıs</td>
+                  <td>1,378,000₺</td>
+                  <td>468,000₺</td>
+                  <td>910,000₺</td>
+                  <td>%66.0</td>
+                </tr>
+                <tr>
+                  <td>Haziran</td>
+                  <td>1,265,000₺</td>
+                  <td>433,000₺</td>
+                  <td>832,000₺</td>
+                  <td>%65.8</td>
+                </tr>
+                <tr>
+                  <td>Temmuz</td>
+                  <td>1,488,000₺</td>
+                  <td>512,000₺</td>
+                  <td>976,000₺</td>
+                  <td>%65.6</td>
+                </tr>
+                <tr>
+                  <td>Ağustos</td>
+                  <td>1,395,000₺</td>
+                  <td>456,000₺</td>
+                  <td>939,000₺</td>
+                  <td>%67.3</td>
+                </tr>
+                <tr class="table-primary">
+                  <td><strong>Eylül</strong></td>
+                  <td><strong>1,247,500₺</strong></td>
+                  <td><strong>385,200₺</strong></td>
+                  <td><strong>862,300₺</strong></td>
+                  <td><strong>%69.1</strong></td>
+                </tr>
+                <tr class="table-dark">
+                  <td><strong>TOPLAM</strong></td>
+                  <td><strong>11,278,500₺</strong></td>
+                  <td><strong>3,970,200₺</strong></td>
+                  <td><strong>7,308,300₺</strong></td>
+                  <td><strong>%64.8</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comparison -->
+      <div class="card">
+        <div class="card-header">
+          <h6 class="mb-0">ÖNCEKI DÖNEM KARŞILAŞTIRMASI (Eylül 2024)</h6>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <div class="text-center">
+                <div class="h5 text-success">+%18.5</div>
+                <div class="text-muted">Gelir Artışı</div>
+                <div class="small">1,247,500₺ / 1,053,000₺</div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="text-center">
+                <div class="h5 text-warning">+%12.3</div>
+                <div class="text-muted">Gider Artışı</div>
+                <div class="small">385,200₺ / 343,100₺</div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="text-center">
+                <div class="h5 text-success">+%21.4</div>
+                <div class="text-muted">Kar Artışı</div>
+                <div class="small">862,300₺ / 709,900₺</div>
+              </div>
+            </div>
+          </div>
+          <div class="alert alert-success mt-3">
+            <strong>📊 Performans:</strong> ✅ Hedefin %8.5 üzerinde
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Date presets
+    document.querySelectorAll('[data-preset]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const preset = e.target.getAttribute('data-preset');
+        const today = new Date();
+        const startDate = document.getElementById('startDate');
+        const endDate = document.getElementById('endDate');
+        
+        switch(preset) {
+          case 'thisMonth':
+            startDate.value = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
+            endDate.value = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0];
+            break;
+          case 'lastMonth':
+            const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+            startDate.value = lastMonth.toISOString().split('T')[0];
+            endDate.value = new Date(today.getFullYear(), today.getMonth(), 0).toISOString().split('T')[0];
+            break;
+          case 'thisYear':
+            startDate.value = new Date(today.getFullYear(), 0, 1).toISOString().split('T')[0];
+            endDate.value = new Date(today.getFullYear(), 11, 31).toISOString().split('T')[0];
+            break;
+          case 'lastYear':
+            startDate.value = new Date(today.getFullYear() - 1, 0, 1).toISOString().split('T')[0];
+            endDate.value = new Date(today.getFullYear() - 1, 11, 31).toISOString().split('T')[0];
+            break;
+          case 'last6Months':
+            const sixMonthsAgo = new Date(today.getFullYear(), today.getMonth() - 6, 1);
+            startDate.value = sixMonthsAgo.toISOString().split('T')[0];
+            endDate.value = today.toISOString().split('T')[0];
+            break;
+        }
+      });
+    });
+
+    // Chart.js implementation
+    const ctx = document.getElementById('incomeExpenseChart').getContext('2d');
+    const chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl'],
+        datasets: [
+          {
+            label: 'Gelir',
+            data: [982000, 1125000, 1256000, 1142000, 1378000, 1265000, 1488000, 1395000, 1247500],
+            backgroundColor: '#22c55e',
+            borderColor: '#16a34a',
+            borderWidth: 1
+          },
+          {
+            label: 'Gider',
+            data: [412000, 438000, 445000, 421000, 468000, 433000, 512000, 456000, 385200],
+            backgroundColor: '#ef4444',
+            borderColor: '#dc2626',
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: function(value) {
+                return value.toLocaleString('tr-TR') + '₺';
+              }
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            position: 'top',
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return context.dataset.label + ': ' + context.parsed.y.toLocaleString('tr-TR') + '₺';
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // Form submission
+    document.getElementById('reportFilters').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const reportType = document.querySelector('input[name="reportType"]:checked').value;
+      const startDate = document.getElementById('startDate').value;
+      const endDate = document.getElementById('endDate').value;
+      const grouping = document.querySelector('input[name="grouping"]:checked').value;
+      const comparePrevious = document.getElementById('comparePrevious').checked;
+      
+      console.log('Generating report:', {
+        reportType,
+        startDate,
+        endDate,
+        grouping,
+        comparePrevious
+      });
+      
+      alert('Rapor oluşturuluyor... (Demo)');
+    });
+
+    // Download buttons
+    document.getElementById('downloadPdf').addEventListener('click', () => {
+      alert('PDF raporu indiriliyor... (Demo)');
+    });
+
+    document.getElementById('downloadExcel').addEventListener('click', () => {
+      // Mock CSV export
+      const csvData = [
+        ['Ay', 'Gelir', 'Gider', 'Kar', 'Marj'],
+        ['Ocak', '982,000₺', '412,000₺', '570,000₺', '%58.0'],
+        ['Şubat', '1,125,000₺', '438,000₺', '687,000₺', '%61.1'],
+        ['Mart', '1,256,000₺', '445,000₺', '811,000₺', '%64.6'],
+        ['Nisan', '1,142,000₺', '421,000₺', '721,000₺', '%63.1'],
+        ['Mayıs', '1,378,000₺', '468,000₺', '910,000₺', '%66.0'],
+        ['Haziran', '1,265,000₺', '433,000₺', '832,000₺', '%65.8'],
+        ['Temmuz', '1,488,000₺', '512,000₺', '976,000₺', '%65.6'],
+        ['Ağustos', '1,395,000₺', '456,000₺', '939,000₺', '%67.3'],
+        ['Eylül', '1,247,500₺', '385,200₺', '862,300₺', '%69.1']
+      ];
+      
+      const csv = csvData.map(row => row.join(';')).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'mali-rapor.csv';
+      link.click();
+    });
+
+    // Initialize
+    window.addEventListener('DOMContentLoaded', () => {
+      // Set default dates
+      const today = new Date();
+      const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+      const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+      
+      document.getElementById('startDate').value = firstDay.toISOString().split('T')[0];
+      document.getElementById('endDate').value = lastDay.toISOString().split('T')[0];
+    });
+  </script>
+</body>
+</html>
+

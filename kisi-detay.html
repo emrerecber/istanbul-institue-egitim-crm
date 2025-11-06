@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Eğitim CRM - Kişi Detay</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; background:#f8fafc; }
+    .page-header { position: sticky; top: 0; background: #ffffffcc; backdrop-filter: saturate(180%) blur(6px); border-bottom: 1px solid #eef2f7; z-index: 10; }
+    .info-card { border:1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(16,24,40,.04); }
+    .badge-status { font-weight: 600; }
+    .timeline { border-left: 2px solid #e5e7eb; padding-left: 1rem; }
+    .timeline-item { position: relative; margin-bottom: 1rem; }
+    .timeline-item::before { content: ""; position: absolute; left: -10px; top: .25rem; width: .75rem; height: .75rem; background: #2563eb; border-radius: 999px; }
+    .drawer { position: fixed; top: 0; right: 0; width: 560px; max-width: 100%; height: 100%; background: #fff; box-shadow: -8px 0 24px rgba(16,24,40,.12); transform: translateX(100%); transition: transform .25s ease; z-index: 1080; overflow-y: auto; }
+    .drawer.open { transform: translateX(0); }
+    .drawer-backdrop { position: fixed; inset: 0; background: rgba(15,23,42,.45); opacity: 0; visibility: hidden; transition: all .2s ease; z-index: 1070; }
+    .drawer-backdrop.show { opacity: 1; visibility: visible; }
+  </style>
+</head>
+<body>
+  <header class="page-header">
+    <div class="container-fluid py-3 d-flex align-items-center justify-content-between">
+      <div>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-1">
+            <li class="breadcrumb-item"><a href="index.html" class="text-decoration-none">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="kisi-listesi.html" class="text-decoration-none">Kişi Listesi</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Kişi Detay</li>
+          </ol>
+        </nav>
+        <h1 class="h5 fw-semibold mb-0">Kişi Detay</h1>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <a class="btn btn-outline-secondary" href="kisi-listesi.html"><i class="fa-solid fa-arrow-left me-2"></i> Geri</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container-fluid py-3 py-md-4">
+    <!-- Person Card -->
+    <div class="card info-card mb-3">
+      <div class="card-body d-flex flex-wrap gap-3 align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-3">
+          <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width:56px;height:56px;">
+            <i class="fa-solid fa-user"></i>
+          </div>
+          <div>
+            <div class="h5 mb-1" id="pName">-</div>
+            <div class="text-muted small" id="pTc">TC: -</div>
+            <div class="text-muted small"><i class="fa-regular fa-envelope me-1"></i><span id="pEmail">-</span> • <i class="fa-solid fa-phone me-1"></i><span id="pPhone">-</span></div>
+            <div class="text-muted small"><i class="fa-regular fa-calendar me-1"></i> Kayıt: <span id="pCreated">-</span></div>
+          </div>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <span class="badge text-bg-success badge-status" id="pStatus">Aktif Öğrenci</span>
+          <button class="btn btn-primary" id="btnEdit"><i class="fa-regular fa-pen-to-square me-2"></i> Düzenle</button>
+          <button class="btn btn-outline-secondary"><i class="fa-regular fa-envelope me-2"></i> Email Gönder</button>
+          <button class="btn btn-outline-secondary"><i class="fa-solid fa-mobile-screen me-2"></i> SMS</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <ul class="nav nav-tabs" id="detailTabs" role="tablist">
+      <li class="nav-item" role="presentation"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabGenel" type="button" role="tab"><i class="fa-regular fa-id-card me-1"></i> Genel Bilgiler</button></li>
+      <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabEgitim" type="button" role="tab"><i class="fa-solid fa-graduation-cap me-1"></i> Eğitim Geçmişi</button></li>
+      <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabMali" type="button" role="tab"><i class="fa-solid fa-coins me-1"></i> Mali Durum</button></li>
+      <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabIletisim" type="button" role="tab"><i class="fa-solid fa-phone me-1"></i> İletişim Geçmişi</button></li>
+      <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabNotlar" type="button" role="tab"><i class="fa-regular fa-note-sticky me-1"></i> Notlar</button></li>
+    </ul>
+    <div class="tab-content border border-top-0 rounded-bottom bg-white p-3">
+      <div class="tab-pane fade show active" id="tabGenel" role="tabpanel">
+        <div class="row g-3">
+          <div class="col-12 col-lg-6">
+            <div class="card info-card h-100">
+              <div class="card-header bg-white fw-semibold">Kişisel Bilgiler</div>
+              <div class="card-body" id="genelBilgiler"></div>
+            </div>
+          </div>
+          <div class="col-12 col-lg-6">
+            <div class="card info-card h-100">
+              <div class="card-header bg-white fw-semibold">İletişim Bilgileri</div>
+              <div class="card-body" id="iletisimBilgileri"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="tabEgitim" role="tabpanel">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead class="table-light"><tr><th>Eğitim Adı</th><th>Tarih</th><th>Durum</th><th>Katılım %</th><th>Sınav Notu</th><th>İşlemler</th></tr></thead>
+            <tbody id="egitimBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="tabMali" role="tabpanel">
+        <div class="row g-3">
+          <div class="col-12 col-lg-4">
+            <div class="card info-card">
+              <div class="card-body">
+                <div class="text-muted small">Toplam Ödeme</div>
+                <div class="h5" id="mToplam">-</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-lg-4">
+            <div class="card info-card">
+              <div class="card-body">
+                <div class="text-muted small">Ödenen</div>
+                <div class="h5" id="mOdenen">-</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-lg-4">
+            <div class="card info-card">
+              <div class="card-body">
+                <div class="text-muted small">Kalan</div>
+                <div class="h5" id="mKalan">-</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card info-card mt-3">
+          <div class="card-header bg-white fw-semibold">Faturalar</div>
+          <div class="card-body">
+            <ul class="list-group list-group-flush" id="faturaList"></ul>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="tabIletisim" role="tabpanel">
+        <div class="timeline" id="timeline"></div>
+      </div>
+      <div class="tab-pane fade" id="tabNotlar" role="tabpanel">
+        <div class="mb-2">
+          <label for="noteText" class="form-label">Yeni Not</label>
+          <textarea id="noteText" class="form-control" rows="2" placeholder="Notunuzu yazın..."></textarea>
+          <div class="d-flex justify-content-end mt-2">
+            <button class="btn btn-primary btn-sm" id="btnAddNote"><i class="fa-solid fa-plus me-1"></i> Ekle</button>
+          </div>
+        </div>
+        <ul class="list-group" id="notesList"></ul>
+      </div>
+    </div>
+  </main>
+
+  <!-- Drawer reuse from list page (simplified) -->
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+  <aside class="drawer" id="personDrawer" aria-labelledby="drawerTitle" aria-modal="true" role="dialog">
+    <div class="p-3 border-bottom d-flex align-items-center justify-content-between">
+      <h2 class="h6 mb-0" id="drawerTitle">Kişiyi Düzenle</h2>
+      <button class="btn btn-outline-secondary btn-sm" id="drawerClose" aria-label="Kapat"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="p-3">
+      <form id="personForm" novalidate>
+        <div class="row g-3">
+          <div class="col-12 col-md-6">
+            <label class="form-label" for="tc">TC Kimlik No *</label>
+            <input id="tc" type="text" class="form-control" required>
+            <div class="invalid-feedback">TC No 11 haneli olmalı.</div>
+          </div>
+          <div class="col-12 col-md-6">
+            <label class="form-label" for="dogumTarihi">Doğum Tarihi</label>
+            <input id="dogumTarihi" type="date" class="form-control">
+          </div>
+          <div class="col-12 col-md-6">
+            <label class="form-label" for="ad">Ad *</label>
+            <input id="ad" type="text" class="form-control" required>
+            <div class="invalid-feedback">Ad zorunludur.</div>
+          </div>
+          <div class="col-12 col-md-6">
+            <label class="form-label" for="soyad">Soyad *</label>
+            <input id="soyad" type="text" class="form-control" required>
+            <div class="invalid-feedback">Soyad zorunludur.</div>
+          </div>
+          <div class="col-12 col-md-6">
+            <label class="form-label" for="email">Email *</label>
+            <input id="email" type="email" class="form-control" required>
+            <div class="invalid-feedback">Geçerli bir email girin.</div>
+          </div>
+          <div class="col-12 col-md-6">
+            <label class="form-label" for="telefon">Telefon *</nlabel>
+            <input id="telefon" type="tel" class="form-control" placeholder="(5xx) xxx-xx-xx" required>
+            <div class="invalid-feedback">Telefon (5xx) xxx-xx-xx formatında olmalı.</div>
+          </div>
+        </div>
+        <div class="d-flex gap-2 mt-3">
+          <button type="submit" class="btn btn-success" id="btnSave"><span class="spinner-border spinner-border-sm me-2 d-none" id="saveSpinner"></span> Kaydet</button>
+          <button type="button" class="btn btn-outline-danger ms-auto" id="btnCancel">İptal</button>
+        </div>
+      </form>
+    </div>
+  </aside>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Dummy store (shared with list example for demo)
+    const kisiler = [
+      { id: 1, tc: "11333333333", ad: "Ahmet", soyad: "YILMAZ", email: "ahmet.yilmaz@email.com", telefon: "0532 111 22 33", kayitTarihi: "2024-03-15", durum: "Aktif", egitimSayisi: 3, dogumTarihi: "1990-05-15", cinsiyet: "Erkek", adres: "Ataşehir, İstanbul", meslek: "Yazılım Geliştirici", egitimDurumu: "Lisans" },
+      { id: 2, tc: "22444444444", ad: "Ayşe", soyad: "DEMİR", email: "ayse.demir@email.com", telefon: "0533 222 33 44", kayitTarihi: "2024-05-20", durum: "Aktif", egitimSayisi: 1, dogumTarihi: "1995-08-10", cinsiyet: "Kadın", adres: "Kadıköy, İstanbul", meslek: "İK Uzmanı", egitimDurumu: "Yüksek Lisans" },
+      { id: 3, tc: "33555555555", ad: "Mehmet", soyad: "KAYA", email: "mehmet.kaya@email.com", telefon: "0534 333 44 55", kayitTarihi: "2024-01-10", durum: "Pasif", egitimSayisi: 5, dogumTarihi: "1988-12-22", cinsiyet: "Erkek", adres: "Beşiktaş, İstanbul", meslek: "Proje Yöneticisi", egitimDurumu: "Lisans" }
+    ];
+    const egitimGecmisi = [
+      { egitimAdi: "YTÜ Editörlük Programı", baslangic: "08.08.2024", bitis: "20.10.2024", durum: "Tamamlandı", katilim: 90, sinavNotu: 85 },
+      { egitimAdi: "CRM Sistemi Eğitimi", baslangic: "15.03.2024", bitis: "30.05.2024", durum: "Tamamlandı", katilim: 95, sinavNotu: 92 }
+    ];
+
+    const formatDateTR = (iso) => new Date(iso).toLocaleDateString('tr-TR');
+    const formatCurrency = (v) => new Intl.NumberFormat('tr-TR',{style:'currency',currency:'TRY', maximumFractionDigits:0}).format(v);
+    const telMask = (v) => { const d=(v||'').replace(/\D/g,''); const out=d.startsWith('0')?d.slice(1):d; const s=out.slice(0,10); if(!s) return ''; const p1=s.slice(0,3),p2=s.slice(3,6),p3=s.slice(6,8),p4=s.slice(8,10); return `(${p1}) ${p2}${p3?'-'+p3:''}${p4?'-'+p4:''}`; };
+    const validateTC = (tc) => { if (!/^\d{11}$/.test(tc)) return false; if (tc[0]==='0') return false; const d=tc.split('').map(Number); const odd=d[0]+d[2]+d[4]+d[6]+d[8]; const even=d[1]+d[3]+d[5]+d[7]; const d10=((odd*7)-even)%10; const d11=(d.slice(0,10).reduce((a,b)=>a+b,0))%10; return d10===d[9] && d11===d[10]; };
+
+    // Read id from query
+    const params = new URLSearchParams(location.search);
+    const id = Number(params.get('id')) || 1;
+    const person = kisiler.find(x=>x.id===id) || kisiler[0];
+
+    // Fill header
+    function fillHeader(){
+      document.getElementById('pName').textContent = `${person.ad} ${person.soyad}`;
+      document.getElementById('pTc').textContent = `TC: ${person.tc}`;
+      document.getElementById('pEmail').textContent = person.email;
+      document.getElementById('pPhone').textContent = person.telefon;
+      document.getElementById('pCreated').textContent = formatDateTR(person.kayitTarihi);
+      document.getElementById('pStatus').textContent = person.durum === 'Aktif' ? 'Aktif Öğrenci' : 'Pasif';
+      document.getElementById('pStatus').className = person.durum === 'Aktif' ? 'badge text-bg-success badge-status' : 'badge text-bg-secondary badge-status';
+    }
+
+    function renderGenel() {
+      const el = document.getElementById('genelBilgiler');
+      el.innerHTML = `
+        <dl class="row mb-0">
+          <dt class="col-sm-4">Ad</dt><dd class="col-sm-8">${person.ad}</dd>
+          <dt class="col-sm-4">Soyad</dt><dd class="col-sm-8">${person.soyad}</dd>
+          <dt class="col-sm-4">TC No</dt><dd class="col-sm-8">${person.tc}</dd>
+          <dt class="col-sm-4">Doğum Tarihi</dt><dd class="col-sm-8">${person.dogumTarihi?formatDateTR(person.dogumTarihi):'-'}</dd>
+          <dt class="col-sm-4">Cinsiyet</dt><dd class="col-sm-8">${person.cinsiyet||'-'}</dd>
+          <dt class="col-sm-4">Adres</dt><dd class="col-sm-8">${person.adres||'-'}</dd>
+          <dt class="col-sm-4">Meslek</dt><dd class="col-sm-8">${person.meslek||'-'}</dd>
+          <dt class="col-sm-4">Öğrenim</dt><dd class="col-sm-8">${person.egitimDurumu||'-'}</dd>
+        </dl>`;
+      const ilt = document.getElementById('iletisimBilgileri');
+      ilt.innerHTML = `
+        <dl class="row mb-0">
+          <dt class="col-sm-4">Email</dt><dd class="col-sm-8">${person.email}</dd>
+          <dt class="col-sm-4">Telefon</dt><dd class="col-sm-8">${person.telefon}</dd>
+          <dt class="col-sm-4">Kayıt Tarihi</dt><dd class="col-sm-8">${formatDateTR(person.kayitTarihi)}</dd>
+          <dt class="col-sm-4">Eğitim Sayısı</dt><dd class="col-sm-8">${person.egitimSayisi}</dd>
+        </dl>`;
+    }
+
+    function renderEgitim() {
+      const tbody = document.getElementById('egitimBody');
+      tbody.innerHTML = '';
+      egitimGecmisi.forEach(e=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${e.egitimAdi}</td>
+          <td>${e.baslangic} - ${e.bitis}</td>
+          <td>✅ ${e.durum}</td>
+          <td>%${e.katilim}</td>
+          <td>${e.sinavNotu}</td>
+          <td><button class="btn btn-outline-secondary btn-sm"><i class="fa-regular fa-file-lines me-1"></i> Sertifika</button></td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderMali() {
+      const toplam = 25000, odenen = 25000, kalan = 0;
+      document.getElementById('mToplam').textContent = formatCurrency(toplam);
+      document.getElementById('mOdenen').textContent = formatCurrency(odenen);
+      document.getElementById('mKalan').textContent = formatCurrency(kalan);
+      const faturaList = document.getElementById('faturaList');
+      faturaList.innerHTML = '';
+      ['2024/001 - 15.03.2024', '2024/045 - 20.05.2024'].forEach(f=>{
+        const li = document.createElement('li');
+        li.className = 'list-group-item d-flex justify-content-between align-items-center';
+        li.innerHTML = `<span><i class="fa-regular fa-file-lines me-2"></i>${f}</span><span class="badge text-bg-success">Ödendi</span>`;
+        faturaList.appendChild(li);
+      });
+    }
+
+    function renderIletisim() {
+      const t = document.getElementById('timeline');
+      t.innerHTML = '';
+      const items = [
+        { icon:'envelope', text:'Email gönderildi: "Yeni eğitim duyurusu"', date:'2025-09-29 14:30' },
+        { icon:'mobile-screen', text:'SMS gönderildi: "Yoklama hatırlatması"', date:'2025-09-28 10:15' },
+        { icon:'phone', text:'Arama kaydı: "Eğitim bilgisi sordu"', date:'2025-09-25 16:00' }
+      ];
+      items.forEach(i=>{
+        const div = document.createElement('div');
+        div.className = 'timeline-item';
+        div.innerHTML = `<div class="text-muted small">${new Date(i.date).toLocaleString('tr-TR')}</div><div><i class="fa-solid fa-${i.icon} me-2"></i>${i.text}</div>`;
+        t.appendChild(div);
+      });
+    }
+
+    // Notes
+    const notes = [];
+    document.getElementById('btnAddNote').addEventListener('click', ()=>{
+      const ta = document.getElementById('noteText');
+      const txt = ta.value.trim(); if (!txt) return;
+      notes.unshift({ text: txt, date: new Date() });
+      ta.value = '';
+      drawNotes();
+    });
+    function drawNotes(){
+      const ul = document.getElementById('notesList'); ul.innerHTML='';
+      notes.forEach((n,idx)=>{
+        const li = document.createElement('li'); li.className='list-group-item d-flex justify-content-between align-items-start';
+        li.innerHTML = `<div><div class="fw-semibold">${new Date(n.date).toLocaleString('tr-TR')}</div><div>${n.text}</div></div>
+        <div class="btn-group btn-group-sm"><button class="btn btn-outline-secondary" data-idx="${idx}"><i class="fa-regular fa-pen-to-square"></i></button><button class="btn btn-outline-danger" data-del="${idx}"><i class="fa-regular fa-trash-can"></i></button></div>`;
+        ul.appendChild(li);
+      });
+      ul.querySelectorAll('button[data-del]').forEach(b=>b.addEventListener('click',()=>{ notes.splice(Number(b.getAttribute('data-del')),1); drawNotes(); }));
+      ul.querySelectorAll('button[data-idx]').forEach(b=>b.addEventListener('click',()=>{ const i=Number(b.getAttribute('data-idx')); const nv=prompt('Notu düzenle:', notes[i].text); if(nv!=null){ notes[i].text = nv; drawNotes(); } }));
+    }
+
+    // Drawer for editing
+    const drawer = document.getElementById('personDrawer');
+    const backdrop = document.getElementById('drawerBackdrop');
+    const openDrawer = () => { drawer.classList.add('open'); backdrop.classList.add('show'); };
+    const closeDrawer = () => { drawer.classList.remove('open'); backdrop.classList.remove('show'); };
+    document.getElementById('btnEdit').addEventListener('click', ()=>{ fillForm(); openDrawer(); });
+    document.getElementById('drawerClose').addEventListener('click', closeDrawer);
+    document.getElementById('btnCancel').addEventListener('click', closeDrawer);
+    backdrop.addEventListener('click', closeDrawer);
+
+    function fillForm(){
+      document.getElementById('tc').value = person.tc;
+      document.getElementById('ad').value = person.ad;
+      document.getElementById('soyad').value = person.soyad;
+      document.getElementById('email').value = person.email;
+      document.getElementById('telefon').value = telMask(person.telefon);
+      document.getElementById('dogumTarihi').value = person.dogumTarihi || '';
+    }
+
+    // Save
+    document.getElementById('personForm').addEventListener('submit',(e)=>{
+      e.preventDefault();
+      const tc = document.getElementById('tc');
+      const ad = document.getElementById('ad');
+      const soyad = document.getElementById('soyad');
+      const email = document.getElementById('email');
+      const telefon = document.getElementById('telefon');
+      [tc,ad,soyad,email,telefon].forEach(el=>el.classList.remove('is-invalid'));
+      let ok=true;
+      if(!validateTC(tc.value)) { tc.classList.add('is-invalid'); ok=false; }
+      if(!ad.value.trim()) { ad.classList.add('is-invalid'); ok=false; }
+      if(!soyad.value.trim()) { soyad.classList.add('is-invalid'); ok=false; }
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) { email.classList.add('is-invalid'); ok=false; }
+      if(!/^\(5\d{2}\) \d{3}-\d{2}-\d{2}$/.test(telefon.value)) { telefon.classList.add('is-invalid'); ok=false; }
+      if(!ok) return;
+      // Fake save
+      person.tc = tc.value; person.ad = ad.value.trim(); person.soyad = soyad.value.trim(); person.email = email.value.trim(); person.telefon = telefon.value; person.dogumTarihi = document.getElementById('dogumTarihi').value;
+      fillHeader(); renderGenel();
+      closeDrawer();
+    });
+    document.getElementById('telefon').addEventListener('input', (e)=>{ e.target.value = telMask(e.target.value); });
+
+    // Init
+    window.addEventListener('DOMContentLoaded', ()=>{
+      fillHeader();
+      renderGenel();
+      renderEgitim();
+      renderMali();
+      renderIletisim();
+      drawNotes();
+    });
+  </script>
+</body>
+</html>
+
+
+

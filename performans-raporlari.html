@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Eğitim CRM - Performans Raporları</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; background:#f8fafc; }
+    .page-header { position: sticky; top: 0; background: #ffffffcc; backdrop-filter: saturate(180%) blur(6px); border-bottom: 1px solid #eef2f7; z-index: 10; }
+    .card { border:1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(16,24,40,.04); }
+    .chart-container { height: 300px; position: relative; }
+    .performance-card { border-left: 4px solid #3b82f6; }
+    .performance-card.excellent { border-left-color: #22c55e; }
+    .performance-card.good { border-left-color: #84cc16; }
+    .performance-card.average { border-left-color: #f59e0b; }
+    .performance-card.poor { border-left-color: #ef4444; }
+    .trend-up { color: #22c55e; }
+    .trend-down { color: #ef4444; }
+    .trend-stable { color: #6b7280; }
+  </style>
+</head>
+<body>
+  <header class="page-header">
+    <div class="container-fluid py-3 d-flex align-items-center justify-content-between">
+      <div>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-1">
+            <li class="breadcrumb-item"><a href="index.html" class="text-decoration-none">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="raporlar.html" class="text-decoration-none">Raporlar</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Performans Raporları</li>
+          </ol>
+        </nav>
+        <h1 class="h5 fw-semibold mb-0">Performans Raporları</h1>
+      </div>
+    </div>
+  </header>
+
+  <main class="container-fluid py-3 py-md-4">
+    <!-- Report Filters -->
+    <div class="card mb-4">
+      <div class="card-header">
+        <h6 class="mb-0">PERFORMANS RAPOR FİLTRELERİ</h6>
+      </div>
+      <div class="card-body">
+        <form id="reportFilters" class="row g-3">
+          <div class="col-12">
+            <label class="form-label">Rapor Tipi:</label>
+            <div class="d-flex gap-3 flex-wrap">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="reportType" value="advisor" id="advisor" checked>
+                <label class="form-check-label" for="advisor">Danışman Performans</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="reportType" value="education" id="education">
+                <label class="form-check-label" for="education">Eğitim Başarı</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="reportType" value="roi" id="roi">
+                <label class="form-check-label" for="roi">ROI Analizi</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="reportType" value="trend" id="trend">
+                <label class="form-check-label" for="trend">Trend Analizi</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-3">
+            <label class="form-label">Tarih Aralığı:</label>
+            <div class="row g-2">
+              <div class="col-6">
+                <input type="date" class="form-control" id="startDate" value="2025-09-01">
+              </div>
+              <div class="col-6">
+                <input type="date" class="form-control" id="endDate" value="2025-09-30">
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-3">
+            <label class="form-label">Danışman:</label>
+            <select class="form-select" id="advisorFilter">
+              <option value="">Tümü</option>
+              <option value="İbrahim ERGİN">İbrahim ERGİN</option>
+              <option value="Ayşe DEMİR">Ayşe DEMİR</option>
+              <option value="Mehmet KAYA">Mehmet KAYA</option>
+              <option value="Elif ÖZCAN">Elif ÖZCAN</option>
+            </select>
+          </div>
+
+          <div class="col-12 col-md-3">
+            <label class="form-label">Eğitim:</label>
+            <select class="form-select" id="educationFilter">
+              <option value="">Tümü</option>
+              <option value="YTÜ Editörlük">YTÜ Editörlük</option>
+              <option value="CRM Sistemi">CRM Sistemi</option>
+              <option value="Proje Yönetimi">Proje Yönetimi</option>
+            </select>
+          </div>
+
+          <div class="col-12 col-md-3">
+            <label class="form-label">Metrik:</label>
+            <select class="form-select" id="metricFilter">
+              <option value="conversion">Dönüşüm Oranı</option>
+              <option value="revenue">Gelir</option>
+              <option value="students">Öğrenci Sayısı</option>
+              <option value="satisfaction">Memnuniyet</option>
+            </select>
+          </div>
+
+          <div class="col-12 d-flex gap-2">
+            <button type="submit" class="btn btn-primary">🔍 RAPOR OLUŞTUR</button>
+            <button type="button" class="btn btn-outline-secondary" id="downloadPdf">📄 PDF İndir</button>
+            <button type="button" class="btn btn-outline-success" id="downloadExcel">📥 Excel İndir</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Report Results -->
+    <div id="reportResults">
+      <!-- Advisor Performance Table -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h6 class="mb-0">DANIŞMAN PERFORMANS RAPORU</h6>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead class="table-light">
+                <tr>
+                  <th>Danışman</th>
+                  <th>Potansiyel</th>
+                  <th>Kesin</th>
+                  <th>Dönüşüm</th>
+                  <th>Gelir</th>
+                  <th>Trend</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <div class="avatar bg-primary text-white rounded-circle me-2" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+                        İE
+                      </div>
+                      <div>
+                        <div class="fw-semibold">İbrahim ERGİN</div>
+                        <div class="small text-muted">Senior Danışman</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>85</td>
+                  <td>72</td>
+                  <td>
+                    <span class="badge text-bg-success">%84.7</span>
+                  </td>
+                  <td>892K₺</td>
+                  <td><span class="trend-up">↗ Yükseliş</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <div class="avatar bg-success text-white rounded-circle me-2" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+                        AD
+                      </div>
+                      <div>
+                        <div class="fw-semibold">Ayşe DEMİR</div>
+                        <div class="small text-muted">Danışman</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>68</td>
+                  <td>58</td>
+                  <td>
+                    <span class="badge text-bg-success">%85.3</span>
+                  </td>
+                  <td>715K₺</td>
+                  <td><span class="trend-up">↗ Yükseliş</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <div class="avatar bg-warning text-white rounded-circle me-2" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+                        MK
+                      </div>
+                      <div>
+                        <div class="fw-semibold">Mehmet KAYA</div>
+                        <div class="small text-muted">Danışman</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>52</td>
+                  <td>41</td>
+                  <td>
+                    <span class="badge text-bg-warning">%78.8</span>
+                  </td>
+                  <td>508K₺</td>
+                  <td><span class="trend-stable">→ Sabit</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <div class="avatar bg-info text-white rounded-circle me-2" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+                        EÖ
+                      </div>
+                      <div>
+                        <div class="fw-semibold">Elif ÖZCAN</div>
+                        <div class="small text-muted">Junior Danışman</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>45</td>
+                  <td>38</td>
+                  <td>
+                    <span class="badge text-bg-success">%84.4</span>
+                  </td>
+                  <td>470K₺</td>
+                  <td><span class="trend-up">↗ Yükseliş</span></td>
+                </tr>
+                <tr class="table-dark">
+                  <td><strong>TOPLAM</strong></td>
+                  <td><strong>250</strong></td>
+                  <td><strong>209</strong></td>
+                  <td><strong>%83.6</strong></td>
+                  <td><strong>2.585K₺</strong></td>
+                  <td><span class="trend-up">↗ Genel Yükseliş</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Monthly Trends -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h6 class="mb-0">AYLARA GÖRE TREND</h6>
+        </div>
+        <div class="card-body">
+          <div class="row g-4">
+            <div class="col-12 col-md-6">
+              <h6>İbrahim ERGİN</h6>
+              <div class="chart-container">
+                <canvas id="ibrahimTrend"></canvas>
+              </div>
+              <div class="mt-2">
+                <span class="trend-up">📊 Trend: ↗ Yükseliş</span> | 
+                <span class="text-success">Hedef: %85 (✅ Hedef aşıldı)</span>
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <h6>Ayşe DEMİR</h6>
+              <div class="chart-container">
+                <canvas id="ayseTrend"></canvas>
+              </div>
+              <div class="mt-2">
+                <span class="trend-up">📊 Trend: ↗ Yükseliş</span> | 
+                <span class="text-success">Hedef: %80 (✅ Hedef aşıldı)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Performance Cards -->
+      <div class="row g-3 mb-4">
+        <div class="col-12 col-md-3">
+          <div class="card performance-card excellent">
+            <div class="card-body text-center">
+              <div class="text-success mb-2">
+                <i class="fa-solid fa-trophy fa-2x"></i>
+              </div>
+              <div class="h4 mb-0">%84.7</div>
+              <div class="text-muted">En Yüksek Dönüşüm</div>
+              <div class="small">İbrahim ERGİN</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-3">
+          <div class="card performance-card good">
+            <div class="card-body text-center">
+              <div class="text-primary mb-2">
+                <i class="fa-solid fa-chart-line fa-2x"></i>
+              </div>
+              <div class="h4 mb-0">892K₺</div>
+              <div class="text-muted">En Yüksek Gelir</div>
+              <div class="small">İbrahim ERGİN</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-3">
+          <div class="card performance-card average">
+            <div class="card-body text-center">
+              <div class="text-warning mb-2">
+                <i class="fa-solid fa-users fa-2x"></i>
+              </div>
+              <div class="h4 mb-0">72</div>
+              <div class="text-muted">En Fazla Kesin Kayıt</div>
+              <div class="small">İbrahim ERGİN</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-3">
+          <div class="card performance-card poor">
+            <div class="card-body text-center">
+              <div class="text-danger mb-2">
+                <i class="fa-solid fa-exclamation-triangle fa-2x"></i>
+              </div>
+              <div class="h4 mb-0">%78.8</div>
+              <div class="text-muted">En Düşük Dönüşüm</div>
+              <div class="small">Mehmet KAYA</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROI Analysis -->
+      <div class="card">
+        <div class="card-header">
+          <h6 class="mb-0">ROI ANALİZİ</h6>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-12 col-md-6">
+              <h6>Eğitim Bazlı ROI</h6>
+              <div class="table-responsive">
+                <table class="table table-sm">
+                  <thead>
+                    <tr>
+                      <th>Eğitim</th>
+                      <th>Yatırım</th>
+                      <th>Gelir</th>
+                      <th>ROI</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>YTÜ Editörlük</td>
+                      <td>150K₺</td>
+                      <td>520K₺</td>
+                      <td><span class="text-success">%247</span></td>
+                    </tr>
+                    <tr>
+                      <td>CRM Sistemi</td>
+                      <td>120K₺</td>
+                      <td>385K₺</td>
+                      <td><span class="text-success">%221</span></td>
+                    </tr>
+                    <tr>
+                      <td>Proje Yönetimi</td>
+                      <td>100K₺</td>
+                      <td>445K₺</td>
+                      <td><span class="text-success">%345</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <h6>ROI Trend Grafiği</h6>
+              <div class="chart-container">
+                <canvas id="roiChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // İbrahim ERGİN Trend Chart
+    const ibrahimCtx = document.getElementById('ibrahimTrend').getContext('2d');
+    const ibrahimTrend = new Chart(ibrahimCtx, {
+      type: 'line',
+      data: {
+        labels: ['Oca', 'Mar', 'May', 'Tem', 'Eyl'],
+        datasets: [{
+          label: 'Dönüşüm Oranı (%)',
+          data: [78, 82, 85, 83, 84.7],
+          borderColor: '#22c55e',
+          backgroundColor: 'rgba(34, 197, 94, 0.1)',
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
+      }
+    });
+
+    // Ayşe DEMİR Trend Chart
+    const ayseCtx = document.getElementById('ayseTrend').getContext('2d');
+    const ayseTrend = new Chart(ayseCtx, {
+      type: 'line',
+      data: {
+        labels: ['Oca', 'Mar', 'May', 'Tem', 'Eyl'],
+        datasets: [{
+          label: 'Dönüşüm Oranı (%)',
+          data: [75, 78, 82, 80, 85.3],
+          borderColor: '#3b82f6',
+          backgroundColor: 'rgba(59, 130, 246, 0.1)',
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
+      }
+    });
+
+    // ROI Chart
+    const roiCtx = document.getElementById('roiChart').getContext('2d');
+    const roiChart = new Chart(roiCtx, {
+      type: 'bar',
+      data: {
+        labels: ['YTÜ Editörlük', 'CRM Sistemi', 'Proje Yönetimi'],
+        datasets: [{
+          label: 'ROI (%)',
+          data: [247, 221, 345],
+          backgroundColor: [
+            '#22c55e',
+            '#3b82f6',
+            '#8b5cf6'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
+      }
+    });
+
+    // Form submission
+    document.getElementById('reportFilters').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const reportType = document.querySelector('input[name="reportType"]:checked').value;
+      const startDate = document.getElementById('startDate').value;
+      const endDate = document.getElementById('endDate').value;
+      const advisor = document.getElementById('advisorFilter').value;
+      const education = document.getElementById('educationFilter').value;
+      const metric = document.getElementById('metricFilter').value;
+      
+      console.log('Generating performance report:', {
+        reportType,
+        startDate,
+        endDate,
+        advisor,
+        education,
+        metric
+      });
+      
+      alert('Performans raporu oluşturuluyor... (Demo)');
+    });
+
+    // Download buttons
+    document.getElementById('downloadPdf').addEventListener('click', () => {
+      alert('PDF raporu indiriliyor... (Demo)');
+    });
+
+    document.getElementById('downloadExcel').addEventListener('click', () => {
+      // Mock CSV export
+      const csvData = [
+        ['Danışman', 'Potansiyel', 'Kesin', 'Dönüşüm', 'Gelir'],
+        ['İbrahim ERGİN', '85', '72', '%84.7', '892K₺'],
+        ['Ayşe DEMİR', '68', '58', '%85.3', '715K₺'],
+        ['Mehmet KAYA', '52', '41', '%78.8', '508K₺'],
+        ['Elif ÖZCAN', '45', '38', '%84.4', '470K₺']
+      ];
+      
+      const csv = csvData.map(row => row.join(';')).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'performans-raporu.csv';
+      link.click();
+    });
+
+    // Initialize
+    window.addEventListener('DOMContentLoaded', () => {
+      // Set default dates
+      const today = new Date();
+      const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+      const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+      
+      document.getElementById('startDate').value = firstDay.toISOString().split('T')[0];
+      document.getElementById('endDate').value = lastDay.toISOString().split('T')[0];
+    });
+  </script>
+</body>
+</html>
+

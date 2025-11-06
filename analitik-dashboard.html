@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Eğitim CRM - Analitik Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; background:#f8fafc; }
+    .page-header { position: sticky; top: 0; background: #ffffffcc; backdrop-filter: saturate(180%) blur(6px); border-bottom: 1px solid #eef2f7; z-index: 10; }
+    .card { border:1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(16,24,40,.04); }
+    .chart-container { height: 250px; position: relative; }
+    .kpi-card { border-left: 4px solid #3b82f6; }
+    .kpi-card.success { border-left-color: #22c55e; }
+    .kpi-card.warning { border-left-color: #f59e0b; }
+    .kpi-card.danger { border-left-color: #ef4444; }
+    .live-indicator { animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .alert-item { border-left: 4px solid #ef4444; }
+    .trend-up { color: #22c55e; }
+    .trend-down { color: #ef4444; }
+    .trend-stable { color: #6b7280; }
+  </style>
+</head>
+<body>
+  <header class="page-header">
+    <div class="container-fluid py-3 d-flex align-items-center justify-content-between">
+      <div>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-1">
+            <li class="breadcrumb-item"><a href="index.html" class="text-decoration-none">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="raporlar.html" class="text-decoration-none">Raporlar</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Analitik Dashboard</li>
+          </ol>
+        </nav>
+        <h1 class="h5 fw-semibold mb-0">Analitik Dashboard</h1>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" id="autoRefresh" checked>
+          <label class="form-check-label" for="autoRefresh">
+            <span class="live-indicator">🔄</span> Otomatik Yenile: <span id="refreshStatus">ON</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container-fluid py-3 py-md-4">
+    <!-- Current Status KPIs -->
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-md-3">
+        <div class="card kpi-card success">
+          <div class="card-body text-center">
+            <div class="text-success mb-2">
+              <i class="fa-solid fa-users fa-2x"></i>
+            </div>
+            <div class="h4 mb-0">156</div>
+            <div class="text-muted">AKTİF ÖĞRENCİ</div>
+            <div class="small trend-up">↗ +12 bu hafta</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-3">
+        <div class="card kpi-card success">
+          <div class="card-body text-center">
+            <div class="text-primary mb-2">
+              <i class="fa-solid fa-calendar-day fa-2x"></i>
+            </div>
+            <div class="h4 mb-0">5</div>
+            <div class="text-muted">BU GÜN EĞİTİM</div>
+            <div class="small trend-stable">→ 3 tamamlandı</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-3">
+        <div class="card kpi-card success">
+          <div class="card-body text-center">
+            <div class="text-success mb-2">
+              <i class="fa-solid fa-lira-sign fa-2x"></i>
+            </div>
+            <div class="h4 mb-0">156K₺</div>
+            <div class="text-muted">BU AY GELİR</div>
+            <div class="small trend-up">↗ %18.5 artış</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-3">
+        <div class="card kpi-card warning">
+          <div class="card-body text-center">
+            <div class="text-warning mb-2">
+              <i class="fa-solid fa-phone fa-2x"></i>
+            </div>
+            <div class="h4 mb-0">12</div>
+            <div class="text-muted">BEKLEYEN BAŞVURU</div>
+            <div class="small trend-down">↘ 3 gündür bekliyor</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h6 class="mb-0">YENİ KAYITLAR</h6>
+          </div>
+          <div class="card-body">
+            <div class="chart-container">
+              <canvas id="newRegistrationsChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h6 class="mb-0">MALİ PERFORMANS</h6>
+          </div>
+          <div class="card-body">
+            <div class="chart-container">
+              <canvas id="financialChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h6 class="mb-0">KATILIM ORANI</h6>
+          </div>
+          <div class="card-body">
+            <div class="chart-container">
+              <canvas id="attendanceChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h6 class="mb-0">SINAV BAŞARISI</h6>
+          </div>
+          <div class="card-body">
+            <div class="chart-container">
+              <canvas id="examSuccessChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Required Alerts -->
+    <div class="card mb-4">
+      <div class="card-header">
+        <h6 class="mb-0">AKSİYON GEREKTİREN DURUMLAR</h6>
+      </div>
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-12 col-md-6">
+            <div class="alert alert-warning alert-item">
+              <div class="d-flex align-items-center">
+                <i class="fa-solid fa-exclamation-triangle me-3"></i>
+                <div>
+                  <strong>3 eğitim %50 doluluk altında</strong><br>
+                  <small>İnsan Kaynakları, Finans, Proje Yönetimi</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="alert alert-warning alert-item">
+              <div class="d-flex align-items-center">
+                <i class="fa-solid fa-clock me-3"></i>
+                <div>
+                  <strong>12 başvuru 3 gündür bekliyor</strong><br>
+                  <small>Hemen değerlendirme yapılmalı</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="alert alert-warning alert-item">
+              <div class="d-flex align-items-center">
+                <i class="fa-solid fa-user-times me-3"></i>
+                <div>
+                  <strong>8 öğrenci %70 altı katılım</strong><br>
+                  <small>Bireysel görüşme gerekli</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="alert alert-warning alert-item">
+              <div class="d-flex align-items-center">
+                <i class="fa-solid fa-money-bill-wave me-3"></i>
+                <div>
+                  <strong>5 ödeme gecikmesi var</strong><br>
+                  <small>Takip edilmeli</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-3">
+          <button class="btn btn-outline-primary">
+            <i class="fa-solid fa-list me-2"></i>📋 Detaylı Listeler
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Real-time Activity -->
+    <div class="card">
+      <div class="card-header">
+        <h6 class="mb-0">GERÇEK ZAMANLI AKTİVİTE</h6>
+      </div>
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-12 col-md-4">
+            <h6>Son Kayıtlar</h6>
+            <div class="list-group list-group-flush">
+              <div class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="fw-semibold">Ahmet YILMAZ</div>
+                  <div class="small text-muted">YTÜ Editörlük</div>
+                </div>
+                <span class="badge text-bg-success">Yeni</span>
+              </div>
+              <div class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="fw-semibold">Ayşe DEMİR</div>
+                  <div class="small text-muted">CRM Sistemi</div>
+                </div>
+                <span class="badge text-bg-success">Yeni</span>
+              </div>
+              <div class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="fw-semibold">Mehmet KAYA</div>
+                  <div class="small text-muted">Proje Yönetimi</div>
+                </div>
+                <span class="badge text-bg-warning">Beklemede</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-4">
+            <h6>Son Ödemeler</h6>
+            <div class="list-group list-group-flush">
+              <div class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="fw-semibold">15,000₺</div>
+                  <div class="small text-muted">Ahmet YILMAZ</div>
+                </div>
+                <span class="badge text-bg-success">Ödendi</span>
+              </div>
+              <div class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="fw-semibold">12,000₺</div>
+                  <div class="small text-muted">Ayşe DEMİR</div>
+                </div>
+                <span class="badge text-bg-success">Ödendi</span>
+              </div>
+              <div class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="fw-semibold">8,500₺</div>
+                  <div class="small text-muted">Mehmet KAYA</div>
+                </div>
+                <span class="badge text-bg-warning">Beklemede</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-4">
+            <h6>Son Sınavlar</h6>
+            <div class="list-group list-group-flush">
+              <div class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="fw-semibold">YTÜ Editörlük</div>
+                  <div class="small text-muted">28 katılımcı</div>
+                </div>
+                <span class="badge text-bg-success">Tamamlandı</span>
+              </div>
+              <div class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="fw-semibold">CRM Sistemi</div>
+                  <div class="small text-muted">22 katılımcı</div>
+                </div>
+                <span class="badge text-bg-warning">Devam Ediyor</span>
+              </div>
+              <div class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="fw-semibold">Proje Yönetimi</div>
+                  <div class="small text-muted">18 katılımcı</div>
+                </div>
+                <span class="badge text-bg-info">Planlandı</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Auto refresh functionality
+    let autoRefreshInterval;
+    const autoRefreshCheckbox = document.getElementById('autoRefresh');
+    const refreshStatus = document.getElementById('refreshStatus');
+
+    autoRefreshCheckbox.addEventListener('change', (e) => {
+      if (e.target.checked) {
+        startAutoRefresh();
+        refreshStatus.textContent = 'ON';
+      } else {
+        stopAutoRefresh();
+        refreshStatus.textContent = 'OFF';
+      }
+    });
+
+    function startAutoRefresh() {
+      autoRefreshInterval = setInterval(() => {
+        updateDashboard();
+      }, 30000); // 30 seconds
+    }
+
+    function stopAutoRefresh() {
+      if (autoRefreshInterval) {
+        clearInterval(autoRefreshInterval);
+      }
+    }
+
+    function updateDashboard() {
+      // Mock data update
+      console.log('Dashboard updating...');
+      // In real implementation, this would fetch new data from API
+    }
+
+    // New Registrations Chart
+    const newRegistrationsCtx = document.getElementById('newRegistrationsChart').getContext('2d');
+    const newRegistrationsChart = new Chart(newRegistrationsCtx, {
+      type: 'line',
+      data: {
+        labels: ['Hafta 1', 'Hafta 2', 'Hafta 3', 'Hafta 4'],
+        datasets: [{
+          label: 'Yeni Kayıtlar',
+          data: [12, 19, 15, 25],
+          borderColor: '#3b82f6',
+          backgroundColor: 'rgba(59, 130, 246, 0.1)',
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
+      }
+    });
+
+    // Financial Chart
+    const financialCtx = document.getElementById('financialChart').getContext('2d');
+    const financialChart = new Chart(financialCtx, {
+      type: 'bar',
+      data: {
+        labels: ['Hafta 1', 'Hafta 2', 'Hafta 3', 'Hafta 4'],
+        datasets: [
+          {
+            label: 'Gelir',
+            data: [45000, 52000, 48000, 61000],
+            backgroundColor: '#22c55e'
+          },
+          {
+            label: 'Gider',
+            data: [15000, 18000, 16000, 20000],
+            backgroundColor: '#ef4444'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: function(value) {
+                return value.toLocaleString('tr-TR') + '₺';
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // Attendance Chart
+    const attendanceCtx = document.getElementById('attendanceChart').getContext('2d');
+    const attendanceChart = new Chart(attendanceCtx, {
+      type: 'line',
+      data: {
+        labels: ['Hafta 1', 'Hafta 2', 'Hafta 3', 'Hafta 4'],
+        datasets: [{
+          label: 'Katılım Oranı (%)',
+          data: [85, 92, 88, 95],
+          borderColor: '#8b5cf6',
+          backgroundColor: 'rgba(139, 92, 246, 0.1)',
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
+      }
+    });
+
+    // Exam Success Chart
+    const examSuccessCtx = document.getElementById('examSuccessChart').getContext('2d');
+    const examSuccessChart = new Chart(examSuccessCtx, {
+      type: 'line',
+      data: {
+        labels: ['Sınav 1', 'Sınav 2', 'Sınav 3', 'Sınav 4'],
+        datasets: [{
+          label: 'Ortalama Puan',
+          data: [78, 82, 85, 88],
+          borderColor: '#f59e0b',
+          backgroundColor: 'rgba(245, 158, 11, 0.1)',
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
+      }
+    });
+
+    // Initialize
+    window.addEventListener('DOMContentLoaded', () => {
+      startAutoRefresh();
+    });
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+      stopAutoRefresh();
+    });
+  </script>
+</body>
+</html>
+

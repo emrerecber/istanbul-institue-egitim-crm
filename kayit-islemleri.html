@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Eğitim CRM - Kayıt İşlemleri</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; background:#f8fafc; }
+    .page-header { position: sticky; top: 0; background: #ffffffcc; backdrop-filter: saturate(180%) blur(6px); border-bottom: 1px solid #eef2f7; z-index: 10; }
+    .card { border:1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(16,24,40,.04); }
+    .process-step { border-left: 3px solid #e5e7eb; padding-left: 1rem; margin-bottom: 1.5rem; }
+    .process-step.active { border-left-color: #007bff; }
+    .process-step.completed { border-left-color: #28a745; }
+    .form-section { border: 1px solid #e5e7eb; border-radius: 0.5rem; margin-bottom: 1rem; }
+    .form-section-header { background: #f8fafc; padding: 1rem; border-bottom: 1px solid #e5e7eb; border-radius: 0.5rem 0.5rem 0 0; }
+    .form-section-body { padding: 1rem; }
+  </style>
+</head>
+<body>
+  <header class="page-header">
+    <div class="container-fluid py-3 d-flex align-items-center justify-content-between">
+      <div>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-1">
+            <li class="breadcrumb-item"><a href="index.html" class="text-decoration-none">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Kayıt Yönetimi</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Kayıt İşlemleri</li>
+          </ol>
+        </nav>
+        <h1 class="h5 fw-semibold mb-0">Kayıt İşlemleri</h1>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <button class="btn btn-outline-primary">
+          <i class="fa-solid fa-history me-2"></i>İşlem Geçmişi
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container-fluid py-3 py-md-4">
+    <div class="row">
+      <div class="col-12 col-lg-8">
+        <!-- Process Steps -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <h6 class="mb-0">KAYIT İŞLEM ADIMLARI</h6>
+          </div>
+          <div class="card-body">
+            <div class="process-step completed">
+              <div class="d-flex align-items-center mb-2">
+                <span class="badge text-bg-success me-2">✓</span>
+                <h6 class="mb-0">1. Potansiyel Müşteri Seçimi</h6>
+              </div>
+              <p class="text-muted small mb-0">Ahmet YILMAZ - ABC Teknoloji Ltd. seçildi</p>
+            </div>
+            <div class="process-step active">
+              <div class="d-flex align-items-center mb-2">
+                <span class="badge text-bg-primary me-2">2</span>
+                <h6 class="mb-0">2. Eğitim Programı Seçimi</h6>
+              </div>
+              <p class="text-muted small mb-0">Müşteri için uygun eğitim programını seçin</p>
+            </div>
+            <div class="process-step">
+              <div class="d-flex align-items-center mb-2">
+                <span class="badge text-bg-secondary me-2">3</span>
+                <h6 class="mb-0">3. Fiyatlandırma ve Teklif</h6>
+              </div>
+              <p class="text-muted small mb-0">Eğitim ücreti ve ödeme koşulları belirlenecek</p>
+            </div>
+            <div class="process-step">
+              <div class="d-flex align-items-center mb-2">
+                <span class="badge text-bg-secondary me-2">4</span>
+                <h6 class="mb-0">4. Sözleşme ve Onay</h6>
+              </div>
+              <p class="text-muted small mb-0">Sözleşme imzalanacak ve kayıt onaylanacak</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Education Selection -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <h6 class="mb-0">EĞİTİM PROGRAMI SEÇİMİ</h6>
+          </div>
+          <div class="form-section-body">
+            <div class="row g-3">
+              <div class="col-12">
+                <label class="form-label">Müşteri Bilgileri</label>
+                <div class="alert alert-info">
+                  <strong>Ahmet YILMAZ</strong> - ABC Teknoloji Ltd.<br>
+                  <small>📞 0212 xxx xx xx | 📧 ahmet@abc.com</small>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label">Eğitim Kategorisi *</label>
+                <select class="form-select">
+                  <option>Seçiniz</option>
+                  <option>Programlama</option>
+                  <option>Web Tasarım</option>
+                  <option>Veri Analizi</option>
+                  <option>Proje Yönetimi</option>
+                  <option>Dijital Pazarlama</option>
+                </select>
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label">Eğitim Programı *</label>
+                <select class="form-select">
+                  <option>Önce kategori seçiniz</option>
+                </select>
+              </div>
+              <div class="col-12 col-md-4">
+                <label class="form-label">Başlangıç Tarihi *</label>
+                <input type="date" class="form-control">
+              </div>
+              <div class="col-12 col-md-4">
+                <label class="form-label">Bitiş Tarihi *</label>
+                <input type="date" class="form-control">
+              </div>
+              <div class="col-12 col-md-4">
+                <label class="form-label">Eğitim Süresi</label>
+                <input type="text" class="form-control" placeholder="40 saat" readonly>
+              </div>
+              <div class="col-12">
+                <label class="form-label">Eğitim Açıklaması</label>
+                <textarea class="form-control" rows="3" placeholder="Eğitim içeriği ve hedefleri hakkında bilgi"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pricing Section -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <h6 class="mb-0">FİYATLANDIRMA</h6>
+          </div>
+          <div class="form-section-body">
+            <div class="row g-3">
+              <div class="col-12 col-md-6">
+                <label class="form-label">Eğitim Ücreti *</label>
+                <div class="input-group">
+                  <input type="number" class="form-control" placeholder="2500" step="0.01">
+                  <span class="input-group-text">₺</span>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label">KDV Oranı</label>
+                <select class="form-select">
+                  <option value="18">%18 KDV</option>
+                  <option value="8">%8 KDV</option>
+                  <option value="0">KDV Muaf</option>
+                </select>
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label">İndirim Oranı</label>
+                <div class="input-group">
+                  <input type="number" class="form-control" placeholder="0" step="0.01">
+                  <span class="input-group-text">%</span>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label">İndirim Tutarı</label>
+                <div class="input-group">
+                  <input type="number" class="form-control" placeholder="0" step="0.01" readonly>
+                  <span class="input-group-text">₺</span>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="alert alert-success">
+                  <h6 class="alert-heading">💰 Toplam Tutar Hesaplaması</h6>
+                  <div class="row">
+                    <div class="col-6">Eğitim Ücreti:</div>
+                    <div class="col-6 text-end">₺2,500.00</div>
+                    <div class="col-6">İndirim (-%10):</div>
+                    <div class="col-6 text-end">-₺250.00</div>
+                    <div class="col-6">Ara Toplam:</div>
+                    <div class="col-6 text-end">₺2,250.00</div>
+                    <div class="col-6">KDV (%18):</div>
+                    <div class="col-6 text-end">₺405.00</div>
+                    <hr>
+                    <div class="col-6"><strong>TOPLAM:</strong></div>
+                    <div class="col-6 text-end"><strong>₺2,655.00</strong></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Terms -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <h6 class="mb-0">ÖDEME KOŞULLARI</h6>
+          </div>
+          <div class="form-section-body">
+            <div class="row g-3">
+              <div class="col-12 col-md-6">
+                <label class="form-label">Ödeme Şekli *</label>
+                <select class="form-select">
+                  <option>Seçiniz</option>
+                  <option>Nakit</option>
+                  <option>Kredi Kartı</option>
+                  <option>Banka Havalesi</option>
+                  <option>Taksitli Ödeme</option>
+                </select>
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label">Taksit Sayısı</label>
+                <select class="form-select">
+                  <option>1 Taksit (Peşin)</option>
+                  <option>2 Taksit</option>
+                  <option>3 Taksit</option>
+                  <option>6 Taksit</option>
+                </select>
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label">İlk Ödeme Tarihi</label>
+                <input type="date" class="form-control">
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label">Son Ödeme Tarihi</label>
+                <input type="date" class="form-control">
+              </div>
+              <div class="col-12">
+                <label class="form-label">Özel Koşullar</label>
+                <textarea class="form-control" rows="2" placeholder="Ödeme ile ilgili özel koşullar"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-lg-4">
+        <!-- Quick Actions -->
+        <div class="card">
+          <div class="card-header">
+            <h6 class="mb-0">HIZLI İŞLEMLER</h6>
+          </div>
+          <div class="card-body">
+            <div class="d-grid gap-2">
+              <button class="btn btn-outline-primary">
+                <i class="fa-solid fa-copy me-2"></i>Önceki Kayıttan Kopyala
+              </button>
+              <button class="btn btn-outline-primary">
+                <i class="fa-solid fa-calculator me-2"></i>Fiyat Hesaplayıcı
+              </button>
+              <button class="btn btn-outline-primary">
+                <i class="fa-solid fa-file-contract me-2"></i>Sözleşme Şablonu
+              </button>
+              <button class="btn btn-outline-primary">
+                <i class="fa-solid fa-envelope me-2"></i>Teklif Gönder
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Process Summary -->
+        <div class="card mt-3">
+          <div class="card-header">
+            <h6 class="mb-0">İŞLEM ÖZETİ</h6>
+          </div>
+          <div class="card-body">
+            <div class="list-group list-group-flush">
+              <div class="list-group-item d-flex justify-content-between">
+                <span>Müşteri:</span>
+                <span class="fw-semibold">Ahmet YILMAZ</span>
+              </div>
+              <div class="list-group-item d-flex justify-content-between">
+                <span>Eğitim:</span>
+                <span class="fw-semibold">-</span>
+              </div>
+              <div class="list-group-item d-flex justify-content-between">
+                <span>Toplam Tutar:</span>
+                <span class="fw-semibold">₺0.00</span>
+              </div>
+              <div class="list-group-item d-flex justify-content-between">
+                <span>İşlem Durumu:</span>
+                <span class="badge text-bg-warning">Devam Ediyor</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Next Steps -->
+        <div class="card mt-3">
+          <div class="card-header">
+            <h6 class="mb-0">SONRAKI ADIMLAR</h6>
+          </div>
+          <div class="card-body">
+            <div class="list-group list-group-flush">
+              <div class="list-group-item">
+                <small class="text-muted">1. Eğitim programını seçin</small>
+              </div>
+              <div class="list-group-item">
+                <small class="text-muted">2. Fiyatlandırmayı tamamlayın</small>
+              </div>
+              <div class="list-group-item">
+                <small class="text-muted">3. Ödeme koşullarını belirleyin</small>
+              </div>
+              <div class="list-group-item">
+                <small class="text-muted">4. Sözleşmeyi hazırlayın</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="row mt-4">
+      <div class="col-12">
+        <div class="d-flex gap-2 justify-content-between">
+          <button class="btn btn-outline-secondary">
+            <i class="fa-solid fa-arrow-left me-2"></i>GERİ DÖN
+          </button>
+          <div class="d-flex gap-2">
+            <button class="btn btn-outline-warning">
+              <i class="fa-solid fa-save me-2"></i>TASLAK KAYDET
+            </button>
+            <button class="btn btn-success">
+              <i class="fa-solid fa-arrow-right me-2"></i>SONRAKI ADIM
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="navigation.js"></script>
+</body>
+</html>
+

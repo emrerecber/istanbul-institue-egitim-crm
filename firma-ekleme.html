@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Eğitim CRM - Firma Ekleme</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; background:#f8fafc; }
+    .page-header { position: sticky; top: 0; background: #ffffffcc; backdrop-filter: saturate(180%) blur(6px); border-bottom: 1px solid #eef2f7; z-index: 10; }
+    .card { border:1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(16,24,40,.04); }
+    .form-section { border: 1px solid #e5e7eb; border-radius: 0.5rem; margin-bottom: 1rem; }
+    .form-section-header { background: #f8fafc; padding: 1rem; border-bottom: 1px solid #e5e7eb; border-radius: 0.5rem 0.5rem 0 0; }
+    .form-section-body { padding: 1rem; }
+  </style>
+</head>
+<body>
+  <header class="page-header">
+    <div class="container-fluid py-3 d-flex align-items-center justify-content-between">
+      <div>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-1">
+            <li class="breadcrumb-item"><a href="index.html" class="text-decoration-none">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Firma Yönetimi</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Firma Ekleme</li>
+          </ol>
+        </nav>
+        <h1 class="h5 fw-semibold mb-0">Yeni Firma Ekle</h1>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <button class="btn btn-outline-secondary">
+          <i class="fa-solid fa-arrow-left me-2"></i>Geri Dön
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container-fluid py-3 py-md-4">
+    <div class="row">
+      <div class="col-12 col-lg-8">
+        <!-- Firma Bilgileri -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <h6 class="mb-0">FİRMA BİLGİLERİ</h6>
+          </div>
+          <div class="form-section-body">
+            <div class="row g-3">
+              <div class="col-12 col-md-6">
+                <label class="form-label">Firma Adı *</label>
+                <input type="text" class="form-control" placeholder="Firma adını giriniz">
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label">Vergi No *</label>
+                <input type="text" class="form-control" placeholder="10 haneli vergi numarası">
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label">Vergi Dairesi</label>
+                <input type="text" class="form-control" placeholder="Vergi dairesi adı">
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label">Sektör</label>
+                <select class="form-select">
+                  <option>Seçiniz</option>
+                  <option>Teknoloji</option>
+                  <option>Eğitim</option>
+                  <option>Sağlık</option>
+                  <option>Finans</option>
+                  <option>Diğer</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <label class="form-label">Firma Açıklaması</label>
+                <textarea class="form-control" rows="3" placeholder="Firma hakkında kısa açıklama"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Yetkili Bilgileri -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <h6 class="mb-0">YETKİLİ BİLGİLERİ</h6>
+          </div>
+          <div class="form-section-body">
+            <div class="row g-3">
+              <div class="col-12 col-md-6">
+                <label class="form-label">Yetkili Adı *</label>
+                <input type="text" class="form-control" placeholder="Ad">
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label">Yetkili Soyadı *</label>
+                <input type="text" class="form-control" placeholder="Soyad">
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label">Pozisyon</label>
+                <input type="text" class="form-control" placeholder="İnsan Kaynakları Müdürü">
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label">Telefon *</label>
+                <input type="tel" class="form-control" placeholder="(0212) 555 55 55">
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label">Email *</label>
+                <input type="email" class="form-control" placeholder="yetkili@firma.com">
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label">Cep Telefonu</label>
+                <input type="tel" class="form-control" placeholder="(0532) 555 55 55">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- İletişim Bilgileri -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <h6 class="mb-0">İLETİŞİM BİLGİLERİ</h6>
+          </div>
+          <div class="form-section-body">
+            <div class="row g-3">
+              <div class="col-12">
+                <label class="form-label">Adres *</label>
+                <textarea class="form-control" rows="2" placeholder="Tam adres bilgisi"></textarea>
+              </div>
+              <div class="col-12 col-md-4">
+                <label class="form-label">İl</label>
+                <select class="form-select">
+                  <option>Seçiniz</option>
+                  <option>İstanbul</option>
+                  <option>Ankara</option>
+                  <option>İzmir</option>
+                </select>
+              </div>
+              <div class="col-12 col-md-4">
+                <label class="form-label">İlçe</label>
+                <select class="form-select">
+                  <option>Seçiniz</option>
+                  <option>Kadıköy</option>
+                  <option>Beşiktaş</option>
+                  <option>Şişli</option>
+                </select>
+              </div>
+              <div class="col-12 col-md-4">
+                <label class="form-label">Posta Kodu</label>
+                <input type="text" class="form-control" placeholder="34000">
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label">Web Sitesi</label>
+                <input type="url" class="form-control" placeholder="https://www.firma.com">
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label">Faks</label>
+                <input type="tel" class="form-control" placeholder="(0212) 555 55 56">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ek Bilgiler -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <h6 class="mb-0">EK BİLGİLER</h6>
+          </div>
+          <div class="form-section-body">
+            <div class="row g-3">
+              <div class="col-12 col-md-6">
+                <label class="form-label">Çalışan Sayısı</label>
+                <select class="form-select">
+                  <option>Seçiniz</option>
+                  <option>1-10</option>
+                  <option>11-50</option>
+                  <option>51-200</option>
+                  <option>200+</option>
+                </select>
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label">Kuruluş Yılı</label>
+                <input type="number" class="form-control" placeholder="2020" min="1900" max="2025">
+              </div>
+              <div class="col-12">
+                <label class="form-label">Notlar</label>
+                <textarea class="form-control" rows="3" placeholder="Firma hakkında özel notlar"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-lg-4">
+        <!-- Hızlı İşlemler -->
+        <div class="card">
+          <div class="card-header">
+            <h6 class="mb-0">HIZLI İŞLEMLER</h6>
+          </div>
+          <div class="card-body">
+            <div class="d-grid gap-2">
+              <button class="btn btn-outline-primary">
+                <i class="fa-solid fa-copy me-2"></i>Mevcut Firmadan Kopyala
+              </button>
+              <button class="btn btn-outline-primary">
+                <i class="fa-solid fa-file-import me-2"></i>Excel'den İçe Aktar
+              </button>
+              <button class="btn btn-outline-primary">
+                <i class="fa-solid fa-search me-2"></i>Vergi No Sorgula
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form Özeti -->
+        <div class="card mt-3">
+          <div class="card-header">
+            <h6 class="mb-0">FORM ÖZETİ</h6>
+          </div>
+          <div class="card-body">
+            <div class="list-group list-group-flush">
+              <div class="list-group-item d-flex justify-content-between">
+                <span>Zorunlu Alanlar:</span>
+                <span class="badge text-bg-warning">5</span>
+              </div>
+              <div class="list-group-item d-flex justify-content-between">
+                <span>Doldurulan Alanlar:</span>
+                <span class="badge text-bg-success">0</span>
+              </div>
+              <div class="list-group-item d-flex justify-content-between">
+                <span>Form Durumu:</span>
+                <span class="badge text-bg-danger">Eksik</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="row mt-4">
+      <div class="col-12">
+        <div class="d-flex gap-2 justify-content-end">
+          <button class="btn btn-outline-secondary">
+            <i class="fa-solid fa-save me-2"></i>TASLAK KAYDET
+          </button>
+          <button class="btn btn-outline-danger">
+            <i class="fa-solid fa-times me-2"></i>İPTAL
+          </button>
+          <button class="btn btn-success">
+            <i class="fa-solid fa-check me-2"></i>KAYDET
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="navigation.js"></script>
+</body>
+</html>
+

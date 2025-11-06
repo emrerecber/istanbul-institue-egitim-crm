@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Eğitim CRM - Yetki Yönetimi</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; background:#f8fafc; }
+    .page-header { position: sticky; top: 0; background: #ffffffcc; backdrop-filter: saturate(180%) blur(6px); border-bottom: 1px solid #eef2f7; z-index: 10; }
+    .card { border:1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(16,24,40,.04); }
+    .permission-section { border: 1px solid #e5e7eb; border-radius: 0.5rem; margin-bottom: 1rem; }
+    .permission-section-header { background: #f8fafc; padding: 1rem; border-bottom: 1px solid #e5e7eb; border-radius: 0.5rem 0.5rem 0 0; }
+    .permission-section-body { padding: 1rem; }
+    .permission-item { border-bottom: 1px solid #f1f3f4; padding: 0.75rem 0; }
+    .permission-item:last-child { border-bottom: none; }
+    .role-badge { font-size: 0.75rem; }
+  </style>
+</head>
+<body>
+  <header class="page-header">
+    <div class="container-fluid py-3 d-flex align-items-center justify-content-between">
+      <div>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-1">
+            <li class="breadcrumb-item"><a href="index.html" class="text-decoration-none">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Sistem</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Yetki Yönetimi</li>
+          </ol>
+        </nav>
+        <h1 class="h5 fw-semibold mb-0">Yetki Yönetimi</h1>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <button class="btn btn-outline-primary">
+          <i class="fa-solid fa-plus me-2"></i>Yeni Rol Ekle
+        </button>
+        <button class="btn btn-success">
+          <i class="fa-solid fa-save me-2"></i>Kaydet
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container-fluid py-3 py-md-4">
+    <div class="row">
+      <div class="col-12 col-lg-8">
+        <!-- Roles Overview -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <h6 class="mb-0">ROL ÖZETİ</h6>
+          </div>
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-12 col-md-3">
+                <div class="text-center">
+                  <div class="fs-1 text-danger">👑</div>
+                  <h6 class="mt-2">Yönetici</h6>
+                  <span class="badge text-bg-danger role-badge">Tam Yetki</span>
+                  <div class="small text-muted mt-1">3 kullanıcı</div>
+                </div>
+              </div>
+              <div class="col-12 col-md-3">
+                <div class="text-center">
+                  <div class="fs-1 text-primary">👨‍🏫</div>
+                  <h6 class="mt-2">Eğitmen</h6>
+                  <span class="badge text-bg-primary role-badge">Eğitim Yetkisi</span>
+                  <div class="small text-muted mt-1">5 kullanıcı</div>
+                </div>
+              </div>
+              <div class="col-12 col-md-3">
+                <div class="text-center">
+                  <div class="fs-1 text-info">💼</div>
+                  <h6 class="mt-2">Satış</h6>
+                  <span class="badge text-bg-info role-badge">Satış Yetkisi</span>
+                  <div class="small text-muted mt-1">4 kullanıcı</div>
+                </div>
+              </div>
+              <div class="col-12 col-md-3">
+                <div class="text-center">
+                  <div class="fs-1 text-success">💰</div>
+                  <h6 class="mt-2">Muhasebe</h6>
+                  <span class="badge text-bg-success role-badge">Mali Yetki</span>
+                  <div class="small text-muted mt-1">3 kullanıcı</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Permission Settings -->
+        <div class="permission-section">
+          <div class="permission-section-header">
+            <h6 class="mb-0">KİŞİ YÖNETİMİ YETKİLERİ</h6>
+          </div>
+          <div class="permission-section-body">
+            <div class="permission-item">
+              <div class="row align-items-center">
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Kişi Listesi Görüntüleme</label>
+                  <p class="text-muted small mb-0">Kişi listesini görüntüleme yetkisi</p>
+                </div>
+                <div class="col-md-6">
+                  <div class="row g-2">
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="personViewAdmin" checked disabled>
+                        <label class="form-check-label small" for="personViewAdmin">Yönetici</label>
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="personViewTeacher" checked>
+                        <label class="form-check-label small" for="personViewTeacher">Eğitmen</label>
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="personViewSales" checked>
+                        <label class="form-check-label small" for="personViewSales">Satış</label>
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="personViewAccount">
+                        <label class="form-check-label small" for="personViewAccount">Muhasebe</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="permission-item">
+              <div class="row align-items-center">
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Kişi Ekleme/Düzenleme</label>
+                  <p class="text-muted small mb-0">Yeni kişi ekleme ve mevcut kişi düzenleme</p>
+                </div>
+                <div class="col-md-6">
+                  <div class="row g-2">
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="personEditAdmin" checked disabled>
+                        <label class="form-check-label small" for="personEditAdmin">Yönetici</label>
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="personEditTeacher">
+                        <label class="form-check-label small" for="personEditTeacher">Eğitmen</label>
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="personEditSales" checked>
+                        <label class="form-check-label small" for="personEditSales">Satış</label>
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="personEditAccount">
+                        <label class="form-check-label small" for="personEditAccount">Muhasebe</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="permission-item">
+              <div class="row align-items-center">
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Kişi Silme</label>
+                  <p class="text-muted small mb-0">Kişi kayıtlarını silme yetkisi</p>
+                </div>
+                <div class="col-md-6">
+                  <div class="row g-2">
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="personDeleteAdmin" checked disabled>
+                        <label class="form-check-label small" for="personDeleteAdmin">Yönetici</label>
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="personDeleteTeacher">
+                        <label class="form-check-label small" for="personDeleteTeacher">Eğitmen</label>
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="personDeleteSales">
+                        <label class="form-check-label small" for="personDeleteSales">Satış</label>
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="personDeleteAccount">
+                        <label class="form-check-label small" for="personDeleteAccount">Muhasebe</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Education Permissions -->
+        <div class="permission-section">
+          <div class="permission-section-header">
+            <h6 class="mb-0">EĞİTİM YÖNETİMİ YETKİLERİ</h6>
+          </div>
+          <div class="permission-section-body">
+            <div class="permission-item">
+              <div class="row align-items-center">
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Eğitim Programı Yönetimi</label>
+                  <p class="text-muted small mb-0">Eğitim programları ekleme, düzenleme, silme</p>
+                </div>
+                <div class="col-md-6">
+                  <div class="row g-2">
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="educationManageAdmin" checked disabled>
+                        <label class="form-check-label small" for="educationManageAdmin">Yönetici</label>
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="educationManageTeacher" checked>
+                        <label class="form-check-label small" for="educationManageTeacher">Eğitmen</label>
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="educationManageSales">
+                        <label class="form-check-label small" for="educationManageSales">Satış</label>
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="educationManageAccount">
+                        <label class="form-check-label small" for="educationManageAccount">Muhasebe</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="permission-item">
+              <div class="row align-items-center">
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Yoklama Yönetimi</label>
+                  <p class="text-muted small mb-0">Yoklama alma ve raporlama</p>
+                </div>
+                <div class="col-md-6">
+                  <div class="row g-2">
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="attendanceManageAdmin" checked disabled>
+                        <label class="form-check-label small" for="attendanceManageAdmin">Yönetici</label>
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="attendanceManageTeacher" checked>
+                        <label class="form-check-label small" for="attendanceManageTeacher">Eğitmen</label>
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="attendanceManageSales">
+                        <label class="form-check-label small" for="attendanceManageSales">Satış</label>
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="attendanceManageAccount">
+                        <label class="form-check-label small" for="attendanceManageAccount">Muhasebe</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Financial Permissions -->
+        <div class="permission-section">
+          <div class="permission-section-header">
+            <h6 class="mb-0">MALİ İŞLEMLER YETKİLERİ</h6>
+          </div>
+          <div class="permission-section-body">
+            <div class="permission-item">
+              <div class="row align-items-center">
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Gelir/Gider Yönetimi</label>
+                  <p class="text-muted small mb-0">Mali işlemleri görüntüleme ve yönetme</p>
+                </div>
+                <div class="col-md-6">
+                  <div class="row g-2">
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="financialManageAdmin" checked disabled>
+                        <label class="form-check-label small" for="financialManageAdmin">Yönetici</label>
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="financialManageTeacher">
+                        <label class="form-check-label small" for="financialManageTeacher">Eğitmen</label>
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="financialManageSales">
+                        <label class="form-check-label small" for="financialManageSales">Satış</label>
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="financialManageAccount" checked>
+                        <label class="form-check-label small" for="financialManageAccount">Muhasebe</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="permission-item">
+              <div class="row align-items-center">
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Mali Raporlar</label>
+                  <p class="text-muted small mb-0">Mali raporları görüntüleme ve dışa aktarma</p>
+                </div>
+                <div class="col-md-6">
+                  <div class="row g-2">
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="financialReportAdmin" checked disabled>
+                        <label class="form-check-label small" for="financialReportAdmin">Yönetici</label>
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="financialReportTeacher">
+                        <label class="form-check-label small" for="financialReportTeacher">Eğitmen</label>
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="financialReportSales">
+                        <label class="form-check-label small" for="financialReportSales">Satış</label>
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="financialReportAccount" checked>
+                        <label class="form-check-label small" for="financialReportAccount">Muhasebe</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-lg-4">
+        <!-- Role Management -->
+        <div class="card">
+          <div class="card-header">
+            <h6 class="mb-0">ROL YÖNETİMİ</h6>
+          </div>
+          <div class="card-body">
+            <div class="d-grid gap-2">
+              <button class="btn btn-outline-primary">
+                <i class="fa-solid fa-plus me-2"></i>Yeni Rol Ekle
+              </button>
+              <button class="btn btn-outline-warning">
+                <i class="fa-solid fa-edit me-2"></i>Rol Düzenle
+              </button>
+              <button class="btn btn-outline-danger">
+                <i class="fa-solid fa-trash me-2"></i>Rol Sil
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Permission Summary -->
+        <div class="card mt-3">
+          <div class="card-header">
+            <h6 class="mb-0">YETKİ ÖZETİ</h6>
+          </div>
+          <div class="card-body">
+            <div class="list-group list-group-flush">
+              <div class="list-group-item d-flex justify-content-between">
+                <span>Toplam Yetki:</span>
+                <span class="fw-semibold">24</span>
+              </div>
+              <div class="list-group-item d-flex justify-content-between">
+                <span>Aktif Yetki:</span>
+                <span class="fw-semibold">18</span>
+              </div>
+              <div class="list-group-item d-flex justify-content-between">
+                <span>Kısıtlı Yetki:</span>
+                <span class="fw-semibold">6</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card mt-3">
+          <div class="card-header">
+            <h6 class="mb-0">HIZLI İŞLEMLER</h6>
+          </div>
+          <div class="card-body">
+            <div class="d-grid gap-2">
+              <button class="btn btn-outline-primary">
+                <i class="fa-solid fa-copy me-2"></i>Rol Kopyala
+              </button>
+              <button class="btn btn-outline-primary">
+                <i class="fa-solid fa-download me-2"></i>Yetki Dışa Aktar
+              </button>
+              <button class="btn btn-outline-primary">
+                <i class="fa-solid fa-upload me-2"></i>Yetki İçe Aktar
+              </button>
+              <button class="btn btn-outline-warning">
+                <i class="fa-solid fa-refresh me-2"></i>Varsayılana Sıfırla
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="navigation.js"></script>
+</body>
+</html>
+

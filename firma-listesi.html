@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Eğitim CRM - Firma Listesi</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; background:#f8fafc; }
+    .page-header { position: sticky; top: 0; background: #ffffffcc; backdrop-filter: saturate(180%) blur(6px); border-bottom: 1px solid #eef2f7; z-index: 10; }
+    .card { border:1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(16,24,40,.04); }
+    .filter-panel { background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 0.5rem; }
+    .table-responsive { border-radius: 0.5rem; overflow: hidden; }
+    .status-badge { font-size: 0.75rem; }
+  </style>
+</head>
+<body>
+  <header class="page-header">
+    <div class="container-fluid py-3 d-flex align-items-center justify-content-between">
+      <div>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-1">
+            <li class="breadcrumb-item"><a href="index.html" class="text-decoration-none">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Firma Yönetimi</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Firma Listesi</li>
+          </ol>
+        </nav>
+        <h1 class="h5 fw-semibold mb-0">Firma Listesi</h1>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <span class="badge bg-primary">247 firma</span>
+        <button class="btn btn-success">
+          <i class="fa-solid fa-plus me-2"></i>Yeni Firma Ekle
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container-fluid py-3 py-md-4">
+    <!-- Filter Panel -->
+    <div class="card filter-panel mb-4">
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-12 col-md-3">
+            <label class="form-label">🔍 Arama</label>
+            <input type="text" class="form-control" placeholder="Firma Adı, Vergi No, Yetkili">
+          </div>
+          <div class="col-12 col-md-2">
+            <label class="form-label">📅 Kayıt Tarihi</label>
+            <input type="date" class="form-control">
+          </div>
+          <div class="col-12 col-md-2">
+            <label class="form-label">📅 Bitiş</label>
+            <input type="date" class="form-control">
+          </div>
+          <div class="col-12 col-md-2">
+            <label class="form-label">🏢 Sektör</label>
+            <select class="form-select">
+              <option>Tümü</option>
+              <option>Teknoloji</option>
+              <option>Eğitim</option>
+              <option>Sağlık</option>
+              <option>Finans</option>
+            </select>
+          </div>
+          <div class="col-12 col-md-2">
+            <label class="form-label">📊 Durum</label>
+            <select class="form-select">
+              <option>Tümü</option>
+              <option>Aktif</option>
+              <option>Pasif</option>
+            </select>
+          </div>
+          <div class="col-12 col-md-1 d-flex align-items-end">
+            <div class="btn-group w-100">
+              <button class="btn btn-primary">🔍 Filtrele</button>
+              <button class="btn btn-outline-secondary">🔄 Temizle</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="card">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>#</th>
+                <th>Firma Adı</th>
+                <th>Vergi No</th>
+                <th>Yetkili</th>
+                <th>Telefon</th>
+                <th>Email</th>
+                <th>Kayıt Tarihi</th>
+                <th>Durum</th>
+                <th>İşlemler</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>ABC Teknoloji Ltd.</td>
+                <td>1234567890</td>
+                <td>Ahmet YILMAZ</td>
+                <td>0212 xxx xx xx</td>
+                <td>info@abcteknoloji.com</td>
+                <td>15.03.2024</td>
+                <td><span class="badge text-bg-success status-badge">🟢 Aktif</span></td>
+                <td>
+                  <div class="btn-group btn-group-sm">
+                    <button class="btn btn-outline-primary" title="Görüntüle">👁️</button>
+                    <button class="btn btn-outline-warning" title="Düzenle">📝</button>
+                    <button class="btn btn-outline-danger" title="Sil">🗑️</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>XYZ Eğitim A.Ş.</td>
+                <td>9876543210</td>
+                <td>Ayşe DEMİR</td>
+                <td>0216 xxx xx xx</td>
+                <td>info@xyzegitim.com</td>
+                <td>20.05.2024</td>
+                <td><span class="badge text-bg-success status-badge">🟢 Aktif</span></td>
+                <td>
+                  <div class="btn-group btn-group-sm">
+                    <button class="btn btn-outline-primary" title="Görüntüle">👁️</button>
+                    <button class="btn btn-outline-warning" title="Düzenle">📝</button>
+                    <button class="btn btn-outline-danger" title="Sil">🗑️</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>DEF Sağlık Hiz.</td>
+                <td>5555555555</td>
+                <td>Mehmet KAYA</td>
+                <td>0214 xxx xx xx</td>
+                <td>info@defsaglik.com</td>
+                <td>10.01.2024</td>
+                <td><span class="badge text-bg-secondary status-badge">⚫ Pasif</span></td>
+                <td>
+                  <div class="btn-group btn-group-sm">
+                    <button class="btn btn-outline-primary" title="Görüntüle">👁️</button>
+                    <button class="btn btn-outline-warning" title="Düzenle">📝</button>
+                    <button class="btn btn-outline-danger" title="Sil">🗑️</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="navigation.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Eğitim CRM - Email Gönderimi</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; background:#f8fafc; }
+    .page-header { position: sticky; top: 0; background: #ffffffcc; backdrop-filter: saturate(180%) blur(6px); border-bottom: 1px solid #eef2f7; z-index: 10; }
+    .card { border:1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(16,24,40,.04); }
+    .form-section { border: 1px solid #e5e7eb; border-radius: 0.5rem; margin-bottom: 1rem; }
+    .form-section-header { background: #f8fafc; padding: 1rem; border-bottom: 1px solid #e5e7eb; border-radius: 0.5rem 0.5rem 0 0; }
+    .form-section-body { padding: 1rem; }
+    .rich-text-editor { border: 1px solid #e5e7eb; border-radius: 0.5rem; min-height: 200px; }
+    .editor-toolbar { background: #f8fafc; border-bottom: 1px solid #e5e7eb; padding: 0.5rem; border-radius: 0.5rem 0.5rem 0 0; }
+    .editor-content { padding: 1rem; min-height: 150px; }
+    .file-upload-area { border: 2px dashed #e5e7eb; border-radius: 0.5rem; padding: 2rem; text-align: center; }
+    .file-upload-area.dragover { border-color: #3b82f6; background-color: #f0f9ff; }
+  </style>
+</head>
+<body>
+  <header class="page-header">
+    <div class="container-fluid py-3 d-flex align-items-center justify-content-between">
+      <div>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-1">
+            <li class="breadcrumb-item"><a href="index.html" class="text-decoration-none">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="#" class="text-decoration-none">İletişim</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Email Gönderimi</li>
+          </ol>
+        </nav>
+        <h1 class="h5 fw-semibold mb-0">Email Gönderimi</h1>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <button class="btn btn-outline-secondary">
+          <i class="fa-solid fa-history me-2"></i>Gönderim Geçmişi
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container-fluid py-3 py-md-4">
+    <div class="row g-4">
+      <div class="col-12 col-lg-8">
+        <!-- Recipients Section -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <h6 class="mb-0">ALICILAR</h6>
+          </div>
+          <div class="form-section-body">
+            <div class="row g-3">
+              <div class="col-12">
+                <label class="form-label">Alıcı Seçimi</label>
+                <div class="btn-group w-100" role="group">
+                  <input type="radio" class="btn-check" name="recipientType" id="individual" checked>
+                  <label class="btn btn-outline-primary" for="individual">Bireysel</label>
+                  
+                  <input type="radio" class="btn-check" name="recipientType" id="bulk">
+                  <label class="btn btn-outline-primary" for="bulk">Toplu</label>
+                  
+                  <input type="radio" class="btn-check" name="recipientType" id="filtered">
+                  <label class="btn btn-outline-primary" for="filtered">Filtreli</label>
+                </div>
+              </div>
+              <div class="col-12">
+                <label class="form-label">Alıcı Listesi</label>
+                <div class="input-group">
+                  <input type="text" class="form-control" placeholder="Email adresi veya isim ile ara...">
+                  <button class="btn btn-outline-secondary" type="button">🔍 Ara</button>
+                </div>
+                <div class="mt-2">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="selectAll">
+                    <label class="form-check-label" for="selectAll">
+                      Tümünü Seç
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-body">
+                    <h6 class="card-title">Seçili Alıcılar (5 kişi)</h6>
+                    <div class="list-group list-group-flush">
+                      <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                          <div class="fw-semibold">Ahmet YILMAZ</div>
+                          <div class="small text-muted">ahmet@email.com</div>
+                        </div>
+                        <button class="btn btn-outline-danger btn-sm">❌</button>
+                      </div>
+                      <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                          <div class="fw-semibold">Ayşe DEMİR</div>
+                          <div class="small text-muted">ayse@email.com</div>
+                        </div>
+                        <button class="btn btn-outline-danger btn-sm">❌</button>
+                      </div>
+                      <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                          <div class="fw-semibold">Mehmet KAYA</div>
+                          <div class="small text-muted">mehmet@email.com</div>
+                        </div>
+                        <button class="btn btn-outline-danger btn-sm">❌</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Message Content Section -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <h6 class="mb-0">MESAJ İÇERİĞİ</h6>
+          </div>
+          <div class="form-section-body">
+            <div class="row g-3">
+              <div class="col-12">
+                <label class="form-label">Şablon Kullan</label>
+                <select class="form-select">
+                  <option>Şablon Seçiniz</option>
+                  <option>Eğitim Duyurusu</option>
+                  <option>Sınav Hatırlatması</option>
+                  <option>Ödeme Hatırlatması</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <label class="form-label">Konu *</label>
+                <input type="text" class="form-control" placeholder="Email konusu...">
+              </div>
+              <div class="col-12">
+                <label class="form-label">Mesaj İçeriği *</label>
+                <div class="rich-text-editor">
+                  <div class="editor-toolbar">
+                    <div class="btn-group btn-group-sm" role="group">
+                      <button class="btn btn-outline-secondary" title="Kalın"><i class="fa-solid fa-bold"></i></button>
+                      <button class="btn btn-outline-secondary" title="İtalik"><i class="fa-solid fa-italic"></i></button>
+                      <button class="btn btn-outline-secondary" title="Altı Çizili"><i class="fa-solid fa-underline"></i></button>
+                      <button class="btn btn-outline-secondary" title="Liste"><i class="fa-solid fa-list"></i></button>
+                      <button class="btn btn-outline-secondary" title="Link"><i class="fa-solid fa-link"></i></button>
+                      <button class="btn btn-outline-secondary" title="Resim"><i class="fa-solid fa-image"></i></button>
+                    </div>
+                  </div>
+                  <div class="editor-content" contenteditable="true">
+                    <p>Merhaba {ad_soyad},</p>
+                    <p>{egitim_adi} eğitimi hakkında önemli bilgiler paylaşmak istiyoruz.</p>
+                    <p>Eğitim tarihi: {tarih}<br>
+                    Eğitim saati: {saat}</p>
+                    <p>Saygılarımızla,<br>
+                    İstanbul Enstitüsü</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <label class="form-label">Değişkenler</label>
+                <div class="d-flex flex-wrap gap-2">
+                  <button class="btn btn-outline-secondary btn-sm" onclick="insertVariable('{ad_soyad}')">{ad_soyad}</button>
+                  <button class="btn btn-outline-secondary btn-sm" onclick="insertVariable('{egitim_adi}')">{egitim_adi}</button>
+                  <button class="btn btn-outline-secondary btn-sm" onclick="insertVariable('{tarih}')">{tarih}</button>
+                  <button class="btn btn-outline-secondary btn-sm" onclick="insertVariable('{saat}')">{saat}</button>
+                  <button class="btn btn-outline-secondary btn-sm" onclick="insertVariable('{fiyat}')">{fiyat}</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- File Attachments Section -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <h6 class="mb-0">EK DOSYALAR</h6>
+          </div>
+          <div class="form-section-body">
+            <div class="file-upload-area" id="fileUploadArea">
+              <i class="fa-solid fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+              <p class="text-muted">Dosyaları buraya sürükleyin veya tıklayarak seçin</p>
+              <input type="file" class="d-none" id="fileInput" multiple>
+              <button class="btn btn-outline-primary" onclick="document.getElementById('fileInput').click()">
+                <i class="fa-solid fa-plus me-2"></i>Dosya Seç
+              </button>
+            </div>
+            <div class="mt-3" id="fileList">
+              <!-- Selected files will appear here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Preview and Send Section -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <h6 class="mb-0">ÖNİZLEME VE GÖNDERİM</h6>
+          </div>
+          <div class="form-section-body">
+            <div class="row g-3">
+              <div class="col-12">
+                <label class="form-label">Önizleme</label>
+                <div class="card">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <span class="fw-semibold">Eğitim Duyurusu</span>
+                      <span class="text-muted small">29.09.2025 14:30</span>
+                    </div>
+                    <div class="border-top pt-2">
+                      <p class="mb-1"><strong>Kime:</strong> Ahmet YILMAZ, Ayşe DEMİR, Mehmet KAYA</p>
+                      <p class="mb-1"><strong>Konu:</strong> Yeni Eğitim Programları Açıldı</p>
+                      <div class="mt-2">
+                        <p>Merhaba Ahmet YILMAZ,</p>
+                        <p>YTÜ Editörlük Programı eğitimi hakkında önemli bilgiler paylaşmak istiyoruz.</p>
+                        <p>Eğitim tarihi: 15.10.2025<br>
+                        Eğitim saati: 09:00</p>
+                        <p>Saygılarımızla,<br>
+                        İstanbul Enstitüsü</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="testEmail">
+                  <label class="form-check-label" for="testEmail">
+                    Test email gönder (kendi email adresime)
+                  </label>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="scheduleEmail">
+                  <label class="form-check-label" for="scheduleEmail">
+                    Zamanla gönder
+                  </label>
+                </div>
+                <div class="mt-2" id="scheduleOptions" style="display: none;">
+                  <input type="datetime-local" class="form-control">
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-body">
+                    <h6 class="card-title">Özet</h6>
+                    <div class="row g-3">
+                      <div class="col-6">
+                        <div class="d-flex justify-content-between">
+                          <span>Alıcı Sayısı:</span>
+                          <strong>5 kişi</strong>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="d-flex justify-content-between">
+                          <span>Ek Dosya:</span>
+                          <strong>2 dosya</strong>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="d-flex justify-content-between">
+                          <span>Gönderim Durumu:</span>
+                          <strong class="text-success">Hazır</strong>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="d-flex justify-content-between">
+                          <span>Tahmini Süre:</span>
+                          <strong>2-3 dakika</strong>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-lg-4">
+        <!-- Quick Actions -->
+        <div class="card">
+          <div class="card-header">
+            <h6 class="mb-0">HIZLI İŞLEMLER</h6>
+          </div>
+          <div class="card-body">
+            <div class="d-grid gap-2">
+              <button class="btn btn-outline-primary">
+                <i class="fa-solid fa-users me-2"></i>Alıcı Listesi Yönetimi
+              </button>
+              <button class="btn btn-outline-primary">
+                <i class="fa-solid fa-file-text me-2"></i>Şablon Yönetimi
+              </button>
+              <button class="btn btn-outline-primary">
+                <i class="fa-solid fa-cog me-2"></i>Email Ayarları
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Emails -->
+        <div class="card mt-3">
+          <div class="card-header">
+            <h6 class="mb-0">SON GÖNDERİMLER</h6>
+          </div>
+          <div class="card-body">
+            <div class="list-group list-group-flush">
+              <div class="list-group-item">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <div class="fw-semibold">Eğitim Duyurusu</div>
+                    <div class="small text-muted">5 kişi • 29.09.2025</div>
+                  </div>
+                  <span class="badge text-bg-success">✅ Gönderildi</span>
+                </div>
+              </div>
+              <div class="list-group-item">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <div class="fw-semibold">Sınav Hatırlatması</div>
+                    <div class="small text-muted">12 kişi • 28.09.2025</div>
+                  </div>
+                  <span class="badge text-bg-success">✅ Gönderildi</span>
+                </div>
+              </div>
+              <div class="list-group-item">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <div class="fw-semibold">Ödeme Hatırlatması</div>
+                    <div class="small text-muted">8 kişi • 27.09.2025</div>
+                  </div>
+                  <span class="badge text-bg-warning">⏳ Beklemede</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="row mt-4">
+      <div class="col-12">
+        <div class="d-flex gap-2 justify-content-end">
+          <button class="btn btn-outline-secondary">
+            <i class="fa-solid fa-save me-2"></i>TASLAK KAYDET
+          </button>
+          <button class="btn btn-outline-danger">
+            <i class="fa-solid fa-times me-2"></i>İPTAL
+          </button>
+          <button class="btn btn-success">
+            <i class="fa-solid fa-paper-plane me-2"></i>GÖNDER
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Variable insertion
+    function insertVariable(variable) {
+      const editor = document.querySelector('.editor-content');
+      const selection = window.getSelection();
+      const range = selection.getRangeAt(0);
+      const textNode = document.createTextNode(variable);
+      range.insertNode(textNode);
+      range.setStartAfter(textNode);
+      range.setEndAfter(textNode);
+      selection.removeAllRanges();
+      selection.addRange(range);
+      editor.focus();
+    }
+
+    // File upload handling
+    const fileUploadArea = document.getElementById('fileUploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const fileList = document.getElementById('fileList');
+
+    fileUploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      fileUploadArea.classList.add('dragover');
+    });
+
+    fileUploadArea.addEventListener('dragleave', () => {
+      fileUploadArea.classList.remove('dragover');
+    });
+
+    fileUploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      fileUploadArea.classList.remove('dragover');
+      const files = e.dataTransfer.files;
+      handleFiles(files);
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      handleFiles(e.target.files);
+    });
+
+    function handleFiles(files) {
+      Array.from(files).forEach(file => {
+        const fileItem = document.createElement('div');
+        fileItem.className = 'd-flex justify-content-between align-items-center p-2 border rounded mb-2';
+        fileItem.innerHTML = `
+          <div>
+            <i class="fa-solid fa-file me-2"></i>
+            <span>${file.name}</span>
+            <small class="text-muted ms-2">(${(file.size / 1024).toFixed(1)} KB)</small>
+          </div>
+          <button class="btn btn-outline-danger btn-sm" onclick="this.parentElement.remove()">❌</button>
+        `;
+        fileList.appendChild(fileItem);
+      });
+    }
+
+    // Schedule options toggle
+    document.getElementById('scheduleEmail').addEventListener('change', function() {
+      const scheduleOptions = document.getElementById('scheduleOptions');
+      scheduleOptions.style.display = this.checked ? 'block' : 'none';
+    });
+
+    // Select all functionality
+    document.getElementById('selectAll').addEventListener('change', function() {
+      const checkboxes = document.querySelectorAll('input[type="checkbox"]:not(#selectAll)');
+      checkboxes.forEach(checkbox => {
+        checkbox.checked = this.checked;
+      });
+    });
+
+    // Button handlers
+    document.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        if (btn.textContent.includes('GÖNDER')) {
+          console.log('Sending email...');
+          // Here you would implement email sending logic
+        } else if (btn.textContent.includes('TASLAK KAYDET')) {
+          console.log('Saving draft...');
+        } else if (btn.textContent.includes('İPTAL')) {
+          console.log('Cancelling...');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

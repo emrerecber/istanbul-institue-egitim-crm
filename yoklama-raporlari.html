@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Eğitim CRM - Yoklama Raporları</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; background:#f8fafc; }
+    .page-header { position: sticky; top: 0; background: #ffffffcc; backdrop-filter: saturate(180%) blur(6px); border-bottom: 1px solid #eef2f7; z-index: 10; }
+    .card { border:1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(16,24,40,.04); }
+    .filter-panel { background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 0.5rem; }
+    .chart-container { height: 300px; position: relative; }
+    .report-section { border: 1px solid #e5e7eb; border-radius: 0.5rem; margin-bottom: 1rem; }
+    .report-header { background: #f8fafc; padding: 1rem; border-bottom: 1px solid #e5e7eb; border-radius: 0.5rem 0.5rem 0 0; }
+    .report-body { padding: 1rem; }
+  </style>
+</head>
+<body>
+  <header class="page-header">
+    <div class="container-fluid py-3 d-flex align-items-center justify-content-between">
+      <div>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-1">
+            <li class="breadcrumb-item"><a href="index.html" class="text-decoration-none">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Yoklama</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Yoklama Raporları</li>
+          </ol>
+        </nav>
+        <h1 class="h5 fw-semibold mb-0">Yoklama Raporları</h1>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <button class="btn btn-outline-primary">
+          <i class="fa-solid fa-download me-2"></i>Excel'e Aktar
+        </button>
+        <button class="btn btn-outline-primary">
+          <i class="fa-solid fa-file-pdf me-2"></i>PDF İndir
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container-fluid py-3 py-md-4">
+    <!-- Filter Panel -->
+    <div class="card filter-panel mb-4">
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-12 col-md-2">
+            <label class="form-label">📅 Tarih Aralığı</label>
+            <input type="date" class="form-control" value="2025-09-01">
+          </div>
+          <div class="col-12 col-md-2">
+            <label class="form-label">📅 Bitiş</label>
+            <input type="date" class="form-control" value="2025-09-30">
+          </div>
+          <div class="col-12 col-md-2">
+            <label class="form-label">🎓 Eğitim</label>
+            <select class="form-select">
+              <option>YTÜ Editörlük Programı</option>
+              <option>CRM Sistemi Eğitimi</option>
+              <option>Proje Yönetimi</option>
+            </select>
+          </div>
+          <div class="col-12 col-md-2">
+            <label class="form-label">👤 Öğrenci</label>
+            <select class="form-select">
+              <option>Tümü</option>
+              <option>Ahmet YILMAZ</option>
+              <option>Ayşe DEMİR</option>
+            </select>
+          </div>
+          <div class="col-12 col-md-2">
+            <label class="form-label">📊 Rapor Tipi</label>
+            <select class="form-select">
+              <option>Detaylı Rapor</option>
+              <option>Özet Rapor</option>
+              <option>Karşılaştırmalı Rapor</option>
+            </select>
+          </div>
+          <div class="col-12 col-md-2 d-flex align-items-end">
+            <button class="btn btn-primary w-100">🔍 Rapor Oluştur</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Education-Based Report -->
+    <div class="report-section">
+      <div class="report-header">
+        <h6 class="mb-0">YOKLAMA RAPORU - YTÜ Editörlük Programı</h6>
+        <small class="text-muted">Tarih Aralığı: 08.08.2025 - 20.10.2025 | Toplam Gün: 45 | Tamamlanan Gün: 15</small>
+      </div>
+      <div class="report-body">
+        <div class="row g-3 mb-4">
+          <div class="col-12 col-md-3">
+            <div class="card">
+              <div class="card-body text-center">
+                <div class="h4 text-primary">28</div>
+                <div class="text-muted">Toplam Kayıtlı</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-3">
+            <div class="card">
+              <div class="card-body text-center">
+                <div class="h4 text-success">89.7%</div>
+                <div class="text-muted">Ortalama Katılım</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-3">
+            <div class="card">
+              <div class="card-body text-center">
+                <div class="h4 text-warning">96.4%</div>
+                <div class="text-muted">En Yüksek Katılım</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-3">
+            <div class="card">
+              <div class="card-body text-center">
+                <div class="h4 text-danger">82.1%</div>
+                <div class="text-muted">En Düşük Katılım</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-12 col-md-8">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">GÜNLÜK DETAY</h6>
+              </div>
+              <div class="card-body p-0">
+                <div class="table-responsive">
+                  <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                      <tr>
+                        <th>Tarih</th>
+                        <th>Katılan</th>
+                        <th>Katılmayan</th>
+                        <th>Geç</th>
+                        <th>İzinli</th>
+                        <th>%</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>08.08.2025</td>
+                        <td>27</td>
+                        <td>1</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td><span class="badge text-bg-success">96%</span></td>
+                      </tr>
+                      <tr>
+                        <td>10.08.2025</td>
+                        <td>26</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>0</td>
+                        <td><span class="badge text-bg-success">93%</span></td>
+                      </tr>
+                      <tr>
+                        <td>12.08.2025</td>
+                        <td>25</td>
+                        <td>2</td>
+                        <td>1</td>
+                        <td>0</td>
+                        <td><span class="badge text-bg-warning">89%</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-4">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">KATILIM GRAFİĞİ</h6>
+              </div>
+              <div class="card-body">
+                <div class="chart-container">
+                  <canvas id="attendanceChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Student-Based Report -->
+    <div class="report-section">
+      <div class="report-header">
+        <h6 class="mb-0">ÖĞRENCİ KATILIM RAPORU</h6>
+        <small class="text-muted">Eğitim: YTÜ Editörlük Programı | Tarih Aralığı: 08.08.2025 - 29.09.2025 (15 gün)</small>
+      </div>
+      <div class="report-body">
+        <div class="row g-3">
+          <div class="col-12 col-md-8">
+            <div class="table-responsive">
+              <table class="table table-hover align-middle">
+                <thead class="table-light">
+                  <tr>
+                    <th>#</th>
+                    <th>Ad Soyad</th>
+                    <th>Katıldı</th>
+                    <th>Katılmadı</th>
+                    <th>Geç</th>
+                    <th>%</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td>Ahmet YILMAZ</td>
+                    <td>15</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td><span class="badge text-bg-success">100%</span></td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td>Ayşe DEMİR</td>
+                    <td>14</td>
+                    <td>1</td>
+                    <td>0</td>
+                    <td><span class="badge text-bg-success">93%</span></td>
+                  </tr>
+                  <tr>
+                    <td>3</td>
+                    <td>Mehmet KAYA</td>
+                    <td>13</td>
+                    <td>2</td>
+                    <td>0</td>
+                    <td><span class="badge text-bg-warning">87%</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="col-12 col-md-4">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">PERFORMANS DAĞILIMI</h6>
+              </div>
+              <div class="card-body">
+                <div class="mb-3">
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="small">%90-100</span>
+                    <span class="small fw-semibold">18 kişi (64%)</span>
+                  </div>
+                  <div class="progress" style="height: 8px;">
+                    <div class="progress-bar bg-success" style="width: 64%"></div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="small">%80-89</span>
+                    <span class="small fw-semibold">7 kişi (25%)</span>
+                  </div>
+                  <div class="progress" style="height: 8px;">
+                    <div class="progress-bar bg-warning" style="width: 25%"></div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="small">%70-79</span>
+                    <span class="small fw-semibold">2 kişi (7%)</span>
+                  </div>
+                  <div class="progress" style="height: 8px;">
+                    <div class="progress-bar bg-danger" style="width: 7%"></div>
+                  </div>
+                </div>
+                <div class="alert alert-warning">
+                  <strong>⚠️ DİKKAT GEREKTİRENLER:</strong><br>
+                  • Ali ÖZTÜRK: %80 katılım (2 gün devamsızlık)<br>
+                  • Can ŞAHIN: %73 katılım (3 gün devamsızlık)
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comparative Report -->
+    <div class="report-section">
+      <div class="report-header">
+        <h6 class="mb-0">EĞİTİMLER ARASI KATILIM KARŞILAŞTIRMASI</h6>
+        <small class="text-muted">Eylül 2025</small>
+      </div>
+      <div class="report-body">
+        <div class="row g-3">
+          <div class="col-12 col-md-6">
+            <div class="table-responsive">
+              <table class="table table-hover align-middle">
+                <thead class="table-light">
+                  <tr>
+                    <th>Eğitim Adı</th>
+                    <th>Kayıtlı</th>
+                    <th>Ort.Katılım</th>
+                    <th>Durum</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>YTÜ Editörlük</td>
+                    <td>28</td>
+                    <td>89.7%</td>
+                    <td><span class="badge text-bg-success">✅</span></td>
+                  </tr>
+                  <tr>
+                    <td>CRM Sistemi</td>
+                    <td>22</td>
+                    <td>91.2%</td>
+                    <td><span class="badge text-bg-success">✅</span></td>
+                  </tr>
+                  <tr>
+                    <td>Proje Yönetimi</td>
+                    <td>18</td>
+                    <td>85.4%</td>
+                    <td><span class="badge text-bg-warning">⚠️</span></td>
+                  </tr>
+                  <tr>
+                    <td>Finans Eğitimi</td>
+                    <td>15</td>
+                    <td>78.9%</td>
+                    <td><span class="badge text-bg-warning">⚠️</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">GÖRSEL KARŞILAŞTIRMA</h6>
+              </div>
+              <div class="card-body">
+                <div class="mb-3">
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span>YTÜ Ed.</span>
+                    <span class="fw-semibold">89.7%</span>
+                  </div>
+                  <div class="progress" style="height: 12px;">
+                    <div class="progress-bar bg-success" style="width: 89.7%"></div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span>CRM</span>
+                    <span class="fw-semibold">91.2%</span>
+                  </div>
+                  <div class="progress" style="height: 12px;">
+                    <div class="progress-bar bg-success" style="width: 91.2%"></div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span>Proje Ynt.</span>
+                    <span class="fw-semibold">85.4%</span>
+                  </div>
+                  <div class="progress" style="height: 12px;">
+                    <div class="progress-bar bg-warning" style="width: 85.4%"></div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span>Finans</span>
+                    <span class="fw-semibold">78.9%</span>
+                  </div>
+                  <div class="progress" style="height: 12px;">
+                    <div class="progress-bar bg-danger" style="width: 78.9%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Attendance Chart
+    const ctx = document.getElementById('attendanceChart').getContext('2d');
+    const attendanceChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['08.08', '10.08', '12.08', '15.08', '17.08', '20.08', '22.08'],
+        datasets: [{
+          label: 'Katılım Oranı (%)',
+          data: [96, 93, 89, 95, 92, 88, 94],
+          borderColor: '#3b82f6',
+          backgroundColor: 'rgba(59, 130, 246, 0.1)',
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
