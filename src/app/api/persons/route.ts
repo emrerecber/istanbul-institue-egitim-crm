@@ -91,14 +91,23 @@ export async function POST(request: NextRequest) {
       }
     }
     
-    // TODO: Get actual user ID from session
-    const userId = 'clxxx-default-user-id'
+    // Get default admin user or create if not exists
+    let user = await prisma.user.findUnique({
+      where: { email: 'admin@istanbulinstitute.com' }
+    })
+    
+    if (!user) {
+      return NextResponse.json(
+        { success: false, error: 'Sistem kullanıcısı bulunamadı. Lütfen /api/seed endpoint\'ini çağırın.' },
+        { status: 500 }
+      )
+    }
     
     const person = await prisma.person.create({
       data: {
         ...body,
         birthDate: body.birthDate ? new Date(body.birthDate) : undefined,
-        createdById: userId
+        createdById: user.id
       },
       include: {
         company: true
