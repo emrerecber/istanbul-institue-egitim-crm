@@ -18,6 +18,7 @@ export async function GET(request: NextRequest) {
         { lastName: { contains: search, mode: 'insensitive' } },
         { email: { contains: search, mode: 'insensitive' } },
         { phone: { contains: search, mode: 'insensitive' } },
+        { city: { contains: search, mode: 'insensitive' } },
       ]
     }
     
