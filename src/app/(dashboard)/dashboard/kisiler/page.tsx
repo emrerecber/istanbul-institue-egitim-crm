@@ -6,12 +6,16 @@ import { Table } from '@/components/Table'
 import { Button } from '@/components/Button'
 import { Input } from '@/components/Input'
 import { Card } from '@/components/Card'
+import { Modal } from '@/components/Modal'
+import { PersonForm } from '@/components/PersonForm'
 import { formatDate } from '@/lib/utils'
 
 export default function KisilerPage() {
   const [persons, setPersons] = useState<PersonWithRelations[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [search, setSearch] = useState('')
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedPerson, setSelectedPerson] = useState<PersonWithRelations | null>(null)
   
   useEffect(() => {
     fetchPersons()
@@ -38,6 +42,61 @@ export default function KisilerPage() {
   
   const handleSearch = () => {
     fetchPersons()
+  }
+  
+  const handleAddPerson = async (data: any) => {
+    try {
+      const response = await fetch('/api/persons', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      
+      const result = await response.json()
+      
+      if (result.success) {
+        setIsModalOpen(false)
+        fetchPersons()
+      } else {
+        throw new Error(result.error || 'Kişi eklenirken hata oluştu')
+      }
+    } catch (error: any) {
+      throw error
+    }
+  }
+  
+  const handleEditPerson = async (data: any) => {
+    if (!selectedPerson) return
+    
+    try {
+      const response = await fetch(`/api/persons/${selectedPerson.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      
+      const result = await response.json()
+      
+      if (result.success) {
+        setIsModalOpen(false)
+        setSelectedPerson(null)
+        fetchPersons()
+      } else {
+        throw new Error(result.error || 'Kişi güncellenirken hata oluştu')
+      }
+    } catch (error: any) {
+      throw error
+    }
+  }
+  
+  const openAddModal = () => {
+    setSelectedPerson(null)
+    setIsModalOpen(true)
+  }
+  
+  const openEditModal = (person: PersonWithRelations) => {
+    setSelectedPerson(person)
+    setIsModalOpen(true)
   }
   
   const columns = [
@@ -96,7 +155,7 @@ export default function KisilerPage() {
           <h1 className="text-3xl font-bold">Kişiler</h1>
           <p className="text-gray-600 mt-1">Tüm kişileri görüntüleyin ve yönetin</p>
         </div>
-        <Button onClick={() => alert('Yeni kişi ekleme modal açılacak')}>
+        <Button onClick={openAddModal}>
           ➕ Yeni Kişi Ekle
         </Button>
       </div>
@@ -154,9 +213,29 @@ export default function KisilerPage() {
           columns={columns}
           isLoading={isLoading}
           emptyMessage="Henüz kişi kaydı bulunmuyor"
-          onRowClick={(person) => alert(`Kişi detayı: ${person.firstName} ${person.lastName}`)}
+          onRowClick={openEditModal}
         />
       </Card>
+      
+      {/* Add/Edit Modal */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false)
+          setSelectedPerson(null)
+        }}
+        title={selectedPerson ? 'Kişiyi Düzenle' : 'Yeni Kişi Ekle'}
+        size="lg"
+      >
+        <PersonForm
+          initialData={selectedPerson || undefined}
+          onSubmit={selectedPerson ? handleEditPerson : handleAddPerson}
+          onCancel={() => {
+            setIsModalOpen(false)
+            setSelectedPerson(null)
+          }}
+        />
+      </Modal>
     </div>
   )
 }
