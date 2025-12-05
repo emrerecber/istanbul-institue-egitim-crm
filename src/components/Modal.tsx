@@ -57,10 +57,10 @@ export function Modal({ isOpen, onClose, title, children, size = 'md', className
       />
       
       {/* Modal */}
-      <div className={cn('relative w-full mx-4 bg-white rounded-lg shadow-xl', sizes[size], className)}>
+      <div className={cn('relative w-full mx-4 bg-white rounded-lg shadow-xl max-h-[90vh] flex flex-col', sizes[size], className)}>
         {/* Header */}
         {title && (
-          <div className="flex items-center justify-between p-6 border-b">
+          <div className="flex items-center justify-between p-6 border-b flex-shrink-0">
             <h3 className="text-xl font-semibold">{title}</h3>
             <button
               onClick={onClose}
@@ -74,7 +74,7 @@ export function Modal({ isOpen, onClose, title, children, size = 'md', className
         )}
         
         {/* Content */}
-        <div className="p-6">
+        <div className="p-6 overflow-y-auto flex-1">
           {children}
         </div>
       </div>
