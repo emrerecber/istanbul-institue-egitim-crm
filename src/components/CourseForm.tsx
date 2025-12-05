@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Input from './Input';
-import Button from './Button';
+import { Input } from './Input';
+import { Button } from './Button';
 import { Course, CourseStatus } from '@/types';
 
 interface CourseFormProps {
@@ -247,4 +247,4 @@ const CourseForm: React.FC<CourseFormProps> = ({ course, onSubmit, onCancel }) =
   );
 };
 
-export default CourseForm;
+export { CourseForm };
