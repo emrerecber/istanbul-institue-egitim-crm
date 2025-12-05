@@ -1,4 +1,39 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { DashboardStats } from '@/types'
+import { formatCurrency } from '@/lib/utils'
+
 export default function DashboardPage() {
+  const [stats, setStats] = useState<DashboardStats | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  
+  useEffect(() => {
+    fetchStats()
+  }, [])
+  
+  const fetchStats = async () => {
+    try {
+      const response = await fetch('/api/dashboard/stats')
+      const result = await response.json()
+      if (result.success) {
+        setStats(result.data)
+      }
+    } catch (error) {
+      console.error('Error fetching stats:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+  
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    )
+  }
+  
   return (
     <div className="space-y-6">
       <div>
@@ -12,8 +47,12 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Toplam Öğrenci</p>
-              <p className="text-3xl font-bold mt-2">1,247</p>
-              <p className="text-sm text-green-600 mt-1">↗ %12 artış</p>
+              <p className="text-3xl font-bold mt-2">{stats?.totalStudents || 0}</p>
+              <p className={`text-sm mt-1 ${
+                (stats?.studentGrowth || 0) >= 0 ? 'text-green-600' : 'text-red-600'
+              }`}>
+                {(stats?.studentGrowth || 0) >= 0 ? '↗' : '↘'} %{Math.abs(stats?.studentGrowth || 0)} {(stats?.studentGrowth || 0) >= 0 ? 'artış' : 'azalış'}
+              </p>
             </div>
             <div className="text-4xl">👥</div>
           </div>
@@ -23,8 +62,12 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Aktif Eğitimler</p>
-              <p className="text-3xl font-bold mt-2">23</p>
-              <p className="text-sm text-green-600 mt-1">↗ %5 artış</p>
+              <p className="text-3xl font-bold mt-2">{stats?.activeCourses || 0}</p>
+              <p className={`text-sm mt-1 ${
+                (stats?.courseGrowth || 0) >= 0 ? 'text-green-600' : 'text-red-600'
+              }`}>
+                {(stats?.courseGrowth || 0) >= 0 ? '↗' : '↘'} %{Math.abs(stats?.courseGrowth || 0)} {(stats?.courseGrowth || 0) >= 0 ? 'artış' : 'azalış'}
+              </p>
             </div>
             <div className="text-4xl">📚</div>
           </div>
@@ -34,8 +77,12 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Bu Ay Gelir</p>
-              <p className="text-3xl font-bold mt-2">₺156,750</p>
-              <p className="text-sm text-green-600 mt-1">↗ %18 artış</p>
+              <p className="text-3xl font-bold mt-2">{formatCurrency(stats?.monthlyRevenue || 0)}</p>
+              <p className={`text-sm mt-1 ${
+                (stats?.revenueGrowth || 0) >= 0 ? 'text-green-600' : 'text-red-600'
+              }`}>
+                {(stats?.revenueGrowth || 0) >= 0 ? '↗' : '↘'} %{Math.abs(stats?.revenueGrowth || 0)} {(stats?.revenueGrowth || 0) >= 0 ? 'artış' : 'azalış'}
+              </p>
             </div>
             <div className="text-4xl">💰</div>
           </div>
@@ -45,8 +92,12 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Bekleyen Kayıtlar</p>
-              <p className="text-3xl font-bold mt-2">47</p>
-              <p className="text-sm text-red-600 mt-1">↘ %3 azalış</p>
+              <p className="text-3xl font-bold mt-2">{stats?.pendingRegistrations || 0}</p>
+              <p className={`text-sm mt-1 ${
+                (stats?.registrationGrowth || 0) >= 0 ? 'text-green-600' : 'text-red-600'
+              }`}>
+                {(stats?.registrationGrowth || 0) >= 0 ? '↗' : '↘'} %{Math.abs(stats?.registrationGrowth || 0)} {(stats?.registrationGrowth || 0) >= 0 ? 'artış' : 'azalış'}
+              </p>
             </div>
             <div className="text-4xl">⏳</div>
           </div>
