@@ -26,8 +26,7 @@ export function PersonForm({ initialData, onSubmit, onCancel }: PersonFormProps)
     postalCode: initialData?.postalCode || '',
     notes: initialData?.notes || '',
     source: initialData?.source || '',
-    tags: initialData?.tags || [],
-    companyId: initialData?.companyId || ''
+    tags: initialData?.tags || []
   })
   
   const [isSubmitting, setIsSubmitting] = useState(false)
