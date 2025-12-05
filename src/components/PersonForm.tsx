@@ -15,17 +15,17 @@ export function PersonForm({ initialData, onSubmit, onCancel }: PersonFormProps)
   const [formData, setFormData] = useState<PersonFormData>({
     firstName: initialData?.firstName || '',
     lastName: initialData?.lastName || '',
-    email: initialData?.email || '',
-    phone: initialData?.phone || '',
-    identityNumber: initialData?.identityNumber || '',
-    birthDate: initialData?.birthDate || '',
-    gender: initialData?.gender,
-    address: initialData?.address || '',
-    city: initialData?.city || '',
-    district: initialData?.district || '',
-    postalCode: initialData?.postalCode || '',
-    notes: initialData?.notes || '',
-    source: initialData?.source || '',
+    email: initialData?.email || undefined,
+    phone: initialData?.phone || undefined,
+    identityNumber: initialData?.identityNumber || undefined,
+    birthDate: initialData?.birthDate || undefined,
+    gender: initialData?.gender || undefined,
+    address: initialData?.address || undefined,
+    city: initialData?.city || undefined,
+    district: initialData?.district || undefined,
+    postalCode: initialData?.postalCode || undefined,
+    notes: initialData?.notes || undefined,
+    source: initialData?.source || undefined,
     tags: initialData?.tags || []
   })
   
@@ -86,14 +86,14 @@ export function PersonForm({ initialData, onSubmit, onCancel }: PersonFormProps)
           <Input
             label="E-posta"
             type="email"
-            value={formData.email}
+            value={formData.email || ''}
             onChange={(e) => handleChange('email', e.target.value)}
           />
           <Input
             label="Telefon"
             type="tel"
             placeholder="0532 123 4567"
-            value={formData.phone}
+            value={formData.phone || ''}
             onChange={(e) => handleChange('phone', e.target.value)}
           />
         </div>
@@ -102,7 +102,7 @@ export function PersonForm({ initialData, onSubmit, onCancel }: PersonFormProps)
           <Input
             label="TC Kimlik No"
             maxLength={11}
-            value={formData.identityNumber}
+            value={formData.identityNumber || ''}
             onChange={(e) => handleChange('identityNumber', e.target.value)}
           />
           <Input
@@ -136,24 +136,24 @@ export function PersonForm({ initialData, onSubmit, onCancel }: PersonFormProps)
         
         <Input
           label="Adres"
-          value={formData.address}
+          value={formData.address || ''}
           onChange={(e) => handleChange('address', e.target.value)}
         />
         
         <div className="grid grid-cols-3 gap-4">
           <Input
             label="Şehir"
-            value={formData.city}
+            value={formData.city || ''}
             onChange={(e) => handleChange('city', e.target.value)}
           />
           <Input
             label="İlçe"
-            value={formData.district}
+            value={formData.district || ''}
             onChange={(e) => handleChange('district', e.target.value)}
           />
           <Input
             label="Posta Kodu"
-            value={formData.postalCode}
+            value={formData.postalCode || ''}
             onChange={(e) => handleChange('postalCode', e.target.value)}
           />
         </div>
@@ -166,7 +166,7 @@ export function PersonForm({ initialData, onSubmit, onCancel }: PersonFormProps)
         <Input
           label="Kaynak"
           placeholder="Nasıl ulaştı? (Referans, web, vb.)"
-          value={formData.source}
+          value={formData.source || ''}
           onChange={(e) => handleChange('source', e.target.value)}
         />
         
@@ -175,7 +175,7 @@ export function PersonForm({ initialData, onSubmit, onCancel }: PersonFormProps)
             Notlar
           </label>
           <textarea
-            value={formData.notes}
+            value={formData.notes || ''}
             onChange={(e) => handleChange('notes', e.target.value)}
             rows={3}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
