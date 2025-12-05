@@ -81,9 +81,14 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
       const coursesData = await coursesRes.json();
       const companiesData = await companiesRes.json();
 
-      setPersons(personsData.success ? personsData.data : personsData);
-      setCourses(coursesData);
-      setCompanies(companiesData);
+      // Ensure we always set arrays
+      const personsArray = personsData.success ? personsData.data : personsData;
+      const coursesArray = Array.isArray(coursesData) ? coursesData : [];
+      const companiesArray = Array.isArray(companiesData) ? companiesData : [];
+
+      setPersons(Array.isArray(personsArray) ? personsArray : []);
+      setCourses(coursesArray);
+      setCompanies(companiesArray);
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
