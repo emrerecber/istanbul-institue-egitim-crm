@@ -360,7 +360,7 @@ export default function RegistrationsPage() {
         title={selectedRegistration ? 'Kayıt Düzenle' : 'Yeni Kayıt Ekle'}
       >
         <RegistrationForm
-          registration={selectedRegistration}
+          registration={selectedRegistration as any}
           onSubmit={handleSubmit}
           onCancel={() => setIsModalOpen(false)}
         />
