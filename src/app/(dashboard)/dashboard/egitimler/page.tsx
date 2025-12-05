@@ -142,24 +142,24 @@ export default function CoursesPage() {
   const columns = [
     {
       key: 'code',
-      label: 'Kod',
+      header: 'Kod',
       render: (course: Course) => (
         <span className="font-medium text-gray-900">{course.code}</span>
       ),
     },
     {
       key: 'name',
-      label: 'Eğitim Adı',
+      header: 'Eğitim Adı',
       render: (course: Course) => course.name,
     },
     {
       key: 'instructor',
-      label: 'Eğitmen',
+      header: 'Eğitmen',
       render: (course: Course) => course.instructor || '-',
     },
     {
       key: 'dates',
-      label: 'Tarihler',
+      header: 'Tarihler',
       render: (course: Course) => (
         <div className="text-sm">
           <div>{formatDate(course.startDate)}</div>
@@ -169,7 +169,7 @@ export default function CoursesPage() {
     },
     {
       key: 'capacity',
-      label: 'Kapasite',
+      header: 'Kapasite',
       render: (course: any) => {
         const registered = course._count?.registrations || 0;
         const capacity = course.capacity;
@@ -189,17 +189,17 @@ export default function CoursesPage() {
     },
     {
       key: 'price',
-      label: 'Fiyat',
+      header: 'Fiyat',
       render: (course: Course) => formatCurrency(parseFloat(course.price.toString())),
     },
     {
       key: 'status',
-      label: 'Durum',
+      header: 'Durum',
       render: (course: Course) => getStatusBadge(course.status),
     },
     {
       key: 'actions',
-      label: 'İşlemler',
+      header: 'İşlemler',
       render: (course: Course) => (
         <div className="flex gap-2">
           <Button
@@ -286,7 +286,7 @@ export default function CoursesPage() {
         <Table
           columns={columns}
           data={courses}
-          loading={loading}
+          isLoading={loading}
           emptyMessage="Eğitim bulunamadı"
         />
       </Card>
