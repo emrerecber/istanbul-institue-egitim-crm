@@ -228,7 +228,22 @@ export default function KisilerPage() {
         size="lg"
       >
         <PersonForm
-          initialData={selectedPerson || undefined}
+          initialData={selectedPerson ? {
+            firstName: selectedPerson.firstName,
+            lastName: selectedPerson.lastName,
+            email: selectedPerson.email || undefined,
+            phone: selectedPerson.phone || undefined,
+            identityNumber: selectedPerson.identityNumber || undefined,
+            birthDate: selectedPerson.birthDate || undefined,
+            gender: selectedPerson.gender || undefined,
+            address: selectedPerson.address || undefined,
+            city: selectedPerson.city || undefined,
+            district: selectedPerson.district || undefined,
+            postalCode: selectedPerson.postalCode || undefined,
+            notes: selectedPerson.notes || undefined,
+            source: selectedPerson.source || undefined,
+            tags: selectedPerson.tags || []
+          } : undefined}
           onSubmit={selectedPerson ? handleEditPerson : handleAddPerson}
           onCancel={() => {
             setIsModalOpen(false)
