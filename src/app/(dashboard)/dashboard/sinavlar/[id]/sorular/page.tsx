@@ -7,6 +7,7 @@ import { Button } from '@/components/Button';
 import { Modal } from '@/components/Modal';
 import { Table } from '@/components/Table';
 import { QuestionForm } from '@/components/QuestionForm';
+import { parseCSV, validateQuestionCSV } from '@/lib/csv-parser';
 
 interface Question {
   id: string;
@@ -38,6 +39,9 @@ export default function QuestionsPage() {
   const [loading, setLoading] = useState(true);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [importData, setImportData] = useState<any[]>([]);
+  const [importErrors, setImportErrors] = useState<string[]>([]);
+  const [importing, setImporting] = useState(false);
 
   useEffect(() => {
     if (examId) {
@@ -110,6 +114,93 @@ export default function QuestionsPage() {
     } catch (error) {
       console.error('Error deleting questions:', error);
       alert('Sorular silinirken bir hata oluştu');
+    }
+  };
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const text = e.target?.result as string;
+        const parsed = parseCSV(text);
+        const validation = validateQuestionCSV(parsed);
+
+        if (!validation.valid) {
+          setImportErrors(validation.errors);
+          setImportData([]);
+        } else {
+          setImportData(parsed);
+          setImportErrors([]);
+        }
+      } catch (error) {
+        setImportErrors([error instanceof Error ? error.message : 'Dosya okuma hatası']);
+        setImportData([]);
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  const handleDownloadTemplate = async () => {
+    try {
+      const response = await fetch(`/api/exams/${examId}/import/template`);
+      if (!response.ok) throw new Error('Template download failed');
+      
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'soru-sablonu.csv';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Template download error:', error);
+      alert('Şablon indirilirken bir hata oluştu');
+    }
+  };
+
+  const handleImport = async () => {
+    if (importData.length === 0) {
+      alert('Lütfen önce bir CSV dosyası yükleyin');
+      return;
+    }
+
+    setImporting(true);
+    try {
+      const response = await fetch(`/api/exams/${examId}/import`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ questions: importData }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        if (result.validationErrors) {
+          setImportErrors(result.validationErrors);
+        } else {
+          throw new Error(result.error || 'Import failed');
+        }
+        return;
+      }
+
+      setIsImportModalOpen(false);
+      setImportData([]);
+      setImportErrors([]);
+      fetchQuestions();
+      fetchExam();
+      alert(result.message);
+    } catch (error) {
+      console.error('Import error:', error);
+      alert(error instanceof Error ? error.message : 'Import işlemi sırasında bir hata oluştu');
+    } finally {
+      setImporting(false);
     }
   };
 
@@ -278,17 +369,86 @@ export default function QuestionsPage() {
         />
       </Modal>
 
-      {/* Import Modal - TODO: Create Import UI */}
+      {/* Import Modal */}
       <Modal
         isOpen={isImportModalOpen}
         onClose={() => setIsImportModalOpen(false)}
         title="Toplu Soru İçe Aktarma"
       >
-        <div className="p-4 text-center text-gray-600">
-          CSV/XLSX import özelliği yakında hazır olacak...
-          <div className="mt-4">
-            <Button variant="secondary" onClick={() => setIsImportModalOpen(false)}>
-              Kapat
+        <div className="space-y-4">
+          {/* Instructions */}
+          <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
+            <p className="text-sm text-blue-800">
+              📝 CSV dosyası yükleyerek toplu soru ekleyebilirsiniz.
+              <br />
+              Şablon dosyasını indirip düzenlemeniz önerilir.
+            </p>
+          </div>
+
+          {/* Template Download */}
+          <div className="flex justify-between items-center p-4 bg-gray-50 rounded-md">
+            <div>
+              <h4 className="font-medium text-gray-900">Şablon Dosyası</h4>
+              <p className="text-sm text-gray-600">CSV şablonunu indirin ve düzenleyin</p>
+            </div>
+            <Button variant="secondary" onClick={handleDownloadTemplate}>
+              💾 İndir
+            </Button>
+          </div>
+
+          {/* File Upload */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              CSV Dosyası Yükle
+            </label>
+            <input
+              type="file"
+              accept=".csv"
+              onChange={handleFileUpload}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          {/* Preview */}
+          {importData.length > 0 && (
+            <div className="bg-green-50 border border-green-200 rounded-md p-3">
+              <p className="text-sm text-green-800">
+                ✅ {importData.length} soru hazır. İçe aktarmaya hazır!
+              </p>
+            </div>
+          )}
+
+          {/* Errors */}
+          {importErrors.length > 0 && (
+            <div className="bg-red-50 border border-red-200 rounded-md p-3">
+              <p className="text-sm font-medium text-red-800 mb-2">❌ Hatalar:</p>
+              <ul className="text-sm text-red-700 space-y-1 max-h-40 overflow-y-auto">
+                {importErrors.map((error, index) => (
+                  <li key={index}>• {error}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Actions */}
+          <div className="flex justify-end gap-3 pt-4 border-t">
+            <Button 
+              type="button" 
+              variant="secondary" 
+              onClick={() => {
+                setIsImportModalOpen(false);
+                setImportData([]);
+                setImportErrors([]);
+              }}
+            >
+              İptal
+            </Button>
+            <Button 
+              type="button" 
+              onClick={handleImport}
+              disabled={importing || importData.length === 0 || importErrors.length > 0}
+            >
+              {importing ? 'Aktarılıyor...' : 'İçe Aktar'}
             </Button>
           </div>
         </div>
