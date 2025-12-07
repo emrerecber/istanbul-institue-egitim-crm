@@ -67,3 +67,13 @@ export function generateColor(): string {
   ]
   return colors[Math.floor(Math.random() * colors.length)]
 }
+
+// Generate exam code (format: EXAM-XXXXXX)
+export function generateExamCode(): string {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789' // Removed confusing chars: I, O, 0, 1
+  let code = 'EXAM-'
+  for (let i = 0; i < 6; i++) {
+    code += chars.charAt(Math.floor(Math.random() * chars.length))
+  }
+  return code
+}

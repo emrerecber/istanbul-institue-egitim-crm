@@ -261,12 +261,14 @@ model Exam {
   id          String       @id @default(cuid())
   courseId    String
   course      Course       @relation(fields: [courseId], references: [id])
+  examCode    String       @unique  // Unique code for students to access exam
   title       String
   description String?
   examDate    DateTime
   duration    Int          // Dakika
   totalScore  Int
   passingScore Int
+  isActive    Boolean      @default(true)
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   

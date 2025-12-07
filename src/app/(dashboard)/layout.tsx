@@ -37,6 +37,9 @@ export default function DashboardLayout({
           <a href="/dashboard/kayitlar" className="block px-4 py-2 rounded-lg hover:bg-slate-800 transition">
             📝 Kayıtlar
           </a>
+          <a href="/dashboard/sinavlar" className="block px-4 py-2 rounded-lg hover:bg-slate-800 transition">
+            🎯 Sınavlar
+          </a>
           <a href="/dashboard/mali" className="block px-4 py-2 rounded-lg hover:bg-slate-800 transition">
             💰 Mali İşlemler
           </a>
