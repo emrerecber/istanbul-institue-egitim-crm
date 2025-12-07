@@ -6,6 +6,7 @@ import { Card } from '@/components/Card';
 import { Button } from '@/components/Button';
 import { Modal } from '@/components/Modal';
 import { Table } from '@/components/Table';
+import { QuestionForm } from '@/components/QuestionForm';
 
 interface Question {
   id: string;
@@ -109,6 +110,32 @@ export default function QuestionsPage() {
     } catch (error) {
       console.error('Error deleting questions:', error);
       alert('Sorular silinirken bir hata oluştu');
+    }
+  };
+
+  const handleAddQuestion = async (questionData: any) => {
+    try {
+      const response = await fetch(`/api/exams/${examId}/questions`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(questionData),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to add question');
+      }
+
+      setIsAddModalOpen(false);
+      fetchQuestions();
+      fetchExam();
+      alert('Soru başarıyla eklendi');
+    } catch (error) {
+      console.error('Error adding question:', error);
+      alert(error instanceof Error ? error.message : 'Soru eklenirken bir hata oluştu');
+      throw error;
     }
   };
 
@@ -238,20 +265,17 @@ export default function QuestionsPage() {
         />
       </Card>
 
-      {/* Add Question Modal - TODO: Create QuestionForm */}
+      {/* Add Question Modal */}
       <Modal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         title="Soru Ekle"
       >
-        <div className="p-4 text-center text-gray-600">
-          Soru ekleme formu yakında hazır olacak...
-          <div className="mt-4">
-            <Button variant="secondary" onClick={() => setIsAddModalOpen(false)}>
-              Kapat
-            </Button>
-          </div>
-        </div>
+        <QuestionForm
+          examId={examId}
+          onSubmit={handleAddQuestion}
+          onCancel={() => setIsAddModalOpen(false)}
+        />
       </Modal>
 
       {/* Import Modal - TODO: Create Import UI */}
