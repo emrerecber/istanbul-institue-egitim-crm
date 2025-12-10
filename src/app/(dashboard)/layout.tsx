@@ -1,4 +1,5 @@
 import { ReactNode } from 'react'
+import Breadcrumb from '@/components/Breadcrumb'
 
 export default function DashboardLayout({
   children,
@@ -10,15 +11,19 @@ export default function DashboardLayout({
       {/* Sidebar */}
       <aside className="fixed left-0 top-0 h-screen w-64 bg-slate-900 text-white">
         <div className="p-4 border-b border-slate-800">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-blue-600 flex items-center justify-center">
-              🎓
+          <a href="/dashboard" className="flex items-center gap-3 group">
+            <div className="w-12 h-12 rounded-lg overflow-hidden bg-white flex items-center justify-center flex-shrink-0">
+              <img 
+                src="/istanbul-institute-logo.png" 
+                alt="Istanbul Institute Logo" 
+                className="w-full h-full object-contain"
+              />
             </div>
             <div>
-              <h1 className="font-bold text-lg">Eğitim CRM</h1>
+              <h1 className="font-bold text-lg group-hover:text-blue-400 transition">Eğitim CRM</h1>
               <p className="text-xs text-gray-400">İstanbul Institute</p>
             </div>
-          </div>
+          </a>
         </div>
         
         <nav className="p-4 space-y-2">
@@ -69,6 +74,11 @@ export default function DashboardLayout({
 
         {/* Page Content */}
         <main className="p-6">
+          {/* Breadcrumb */}
+          <div className="mb-6">
+            <Breadcrumb />
+          </div>
+          
           {children}
         </main>
       </div>
