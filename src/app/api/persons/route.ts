@@ -118,8 +118,18 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true, data: person }, { status: 201 })
   } catch (error: any) {
     console.error('Error creating person:', error)
+    console.error('Error details:', {
+      message: error.message,
+      code: error.code,
+      meta: error.meta,
+      stack: error.stack
+    })
     return NextResponse.json(
-      { success: false, error: 'Kişi oluşturulurken hata oluştu' },
+      { 
+        success: false, 
+        error: 'Kişi oluşturulurken hata oluştu',
+        details: error.message // Debug için
+      },
       { status: 500 }
     )
   }
