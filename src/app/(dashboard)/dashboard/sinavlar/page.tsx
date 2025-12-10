@@ -234,6 +234,13 @@ export default function ExamsPage() {
           </Button>
           <Button
             variant="ghost"
+            onClick={() => router.push(`/dashboard/sinavlar/${exam.id}/sonuclar`)}
+            className="text-green-600 hover:text-green-800"
+          >
+            Sonuçlar
+          </Button>
+          <Button
+            variant="ghost"
             onClick={() => handleEditExam(exam)}
             className="text-blue-600 hover:text-blue-800"
           >
