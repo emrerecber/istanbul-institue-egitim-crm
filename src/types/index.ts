@@ -57,6 +57,7 @@ export type PersonFormData = {
   source?: string
   tags?: string[]
   companyId?: string
+  isEmailVerified?: boolean
 }
 
 export type CompanyFormData = {

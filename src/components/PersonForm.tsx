@@ -101,7 +101,12 @@ export function PersonForm({ initialData, onSubmit, onCancel }: PersonFormProps)
   const handleFinalSubmit = async () => {
     try {
       setIsSubmitting(true)
-      await onSubmit(formData)
+      // Email doğrulandıysa bunu ekle
+      const dataToSubmit = {
+        ...formData,
+        isEmailVerified: isEmailVerified
+      }
+      await onSubmit(dataToSubmit)
     } catch (err: any) {
       setError(err.message || 'Bir hata oluştu')
       setShowOTPModal(false)
