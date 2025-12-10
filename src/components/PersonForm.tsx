@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { PersonFormData, Gender } from '@/types'
 import { Input } from './Input'
 import { Button } from './Button'
+import OTPVerification from './OTPVerification'
 
 interface PersonFormProps {
   initialData?: Partial<PersonFormData>
@@ -31,6 +32,9 @@ export function PersonForm({ initialData, onSubmit, onCancel }: PersonFormProps)
   
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState('')
+  const [showOTPModal, setShowOTPModal] = useState(false)
+  const [otpToken, setOtpToken] = useState('')
+  const [isEmailVerified, setIsEmailVerified] = useState(!!initialData) // Mevcut kullanıcı ise email doğrulanmış sayılır
   
   const handleChange = (field: keyof PersonFormData, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }))
@@ -45,6 +49,38 @@ export function PersonForm({ initialData, onSubmit, onCancel }: PersonFormProps)
       return
     }
     
+    // Yeni kullanıcı ve email varsa, email doğrulama yap
+    if (!initialData && formData.email && !isEmailVerified) {
+      // OTP gönder
+      try {
+        setIsSubmitting(true)
+        const res = await fetch('/api/persons/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: formData.email,
+            firstName: formData.firstName
+          })
+        })
+        
+        const data = await res.json()
+        
+        if (!res.ok) {
+          setError(data.error || 'Email doğrulama kodu gönderilemedi')
+          return
+        }
+        
+        setOtpToken(data.tempToken)
+        setShowOTPModal(true)
+      } catch (err: any) {
+        setError('Email doğrulama başlatılamadı')
+      } finally {
+        setIsSubmitting(false)
+      }
+      return
+    }
+    
+    // Email doğrulandıysa veya email yoksa direkt kaydet
     try {
       setIsSubmitting(true)
       await onSubmit(formData)
@@ -52,6 +88,49 @@ export function PersonForm({ initialData, onSubmit, onCancel }: PersonFormProps)
       setError(err.message || 'Bir hata oluştu')
     } finally {
       setIsSubmitting(false)
+    }
+  }
+  
+  const handleOTPVerified = () => {
+    setIsEmailVerified(true)
+    setShowOTPModal(false)
+    // OTP doğrulandı, formu submit et
+    handleFinalSubmit()
+  }
+  
+  const handleFinalSubmit = async () => {
+    try {
+      setIsSubmitting(true)
+      await onSubmit(formData)
+    } catch (err: any) {
+      setError(err.message || 'Bir hata oluştu')
+      setShowOTPModal(false)
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+  
+  const handleResendOTP = async () => {
+    try {
+      const res = await fetch('/api/persons/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: formData.email,
+          firstName: formData.firstName
+        })
+      })
+      
+      const data = await res.json()
+      
+      if (!res.ok) {
+        return { success: false, error: data.error || 'Kod gönderilemedi' }
+      }
+      
+      setOtpToken(data.tempToken)
+      return { success: true, tempToken: data.tempToken }
+    } catch (err) {
+      return { success: false, error: 'Bir hata oluştu' }
     }
   }
   
@@ -201,6 +280,18 @@ export function PersonForm({ initialData, onSubmit, onCancel }: PersonFormProps)
           {initialData ? 'Güncelle' : 'Kaydet'}
         </Button>
       </div>
+      
+      {/* OTP Verification Modal */}
+      {showOTPModal && formData.email && (
+        <OTPVerification
+          email={formData.email}
+          firstName={formData.firstName}
+          tempToken={otpToken}
+          onVerified={handleOTPVerified}
+          onCancel={() => setShowOTPModal(false)}
+          onResend={handleResendOTP}
+        />
+      )}
     </form>
   )
 }

@@ -54,6 +54,12 @@ model Person {
   source            String?         // Nereden geldi (referans, web, sosyal medya, vb.)
   tags              String[]        // Etiketler
   isActive          Boolean         @default(true)
+  
+  // Email Verification (OTP)
+  isEmailVerified   Boolean         @default(false)
+  emailVerificationToken String?
+  emailVerificationExpiry DateTime?
+  
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
   createdById       String
