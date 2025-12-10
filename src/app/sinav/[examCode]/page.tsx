@@ -98,15 +98,35 @@ export default function PublicExamPage() {
     return `${mins}:${secs.toString().padStart(2, '0')}`
   }
 
-  const handleStartExam = () => {
+  const handleStartExam = async () => {
     if (!studentInfo.firstName || !studentInfo.lastName || !studentInfo.email) {
       setError('Lütfen tüm bilgileri doldurun')
       return
     }
 
-    setExamStartTime(new Date())
-    setStep('exam')
-    setError('')
+    // Email validasyon ve sınava erişim kontrolü
+    try {
+      setLoading(true)
+      setError('')
+
+      const res = await fetch(`/api/exams/public/${examCode}?email=${encodeURIComponent(studentInfo.email)}`)
+      const data = await res.json()
+
+      if (!res.ok) {
+        setError(data.error || 'Sınava erişim reddedildi')
+        setLoading(false)
+        return
+      }
+
+      // Başarılı - sınava başla
+      setExamStartTime(new Date())
+      setStep('exam')
+      setError('')
+    } catch (err) {
+      setError('Doğrulama sırasında hata oluştu')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleAnswerChange = (questionId: string, answer: string) => {
@@ -337,7 +357,11 @@ export default function PublicExamPage() {
               {currentQuestion.questionType === 'MULTIPLE_CHOICE' && (
                 <>
                   {['A', 'B', 'C', 'D'].map(option => {
-                    const optionText = currentQuestion.options?.[`option${option}`]
+                    // options JSON olarak geliyor, parse et
+                    const opts = typeof currentQuestion.options === 'string' 
+                      ? JSON.parse(currentQuestion.options) 
+                      : currentQuestion.options
+                    const optionText = opts?.[option] || opts?.[`option${option}`]
                     if (!optionText) return null
 
                     const isSelected = answers[currentQuestion.id] === option

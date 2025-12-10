@@ -7,6 +7,8 @@ export async function GET(
 ) {
   try {
     const { examCode } = params
+    const { searchParams } = new URL(request.url)
+    const email = searchParams.get('email')
 
     const exam = await prisma.exam.findUnique({
       where: { 
@@ -14,6 +16,12 @@ export async function GET(
         isActive: true
       },
       include: {
+        course: {
+          select: {
+            id: true,
+            name: true
+          }
+        },
         questions: {
           orderBy: { order: 'asc' },
           select: {
@@ -34,6 +42,56 @@ export async function GET(
         { error: 'Sınav bulunamadı veya aktif değil' },
         { status: 404 }
       )
+    }
+
+    // Email kontrolü varsa, kayıt ve ödeme kontrolü yap
+    if (email) {
+      const person = await prisma.person.findUnique({
+        where: { email }
+      })
+
+      if (!person) {
+        return NextResponse.json(
+          { error: 'Bu email ile kayıtlı öğrenci bulunamadı' },
+          { status: 403 }
+        )
+      }
+
+      // Bu öğrencinin bu eğitimi almış ve ödeme yapmış olması gerekiyor
+      const registration = await prisma.registration.findFirst({
+        where: {
+          personId: person.id,
+          courseId: exam.courseId,
+          paymentStatus: 'PAID' // Sadece ödeme yapanlar
+        }
+      })
+
+      if (!registration) {
+        return NextResponse.json(
+          { 
+            error: 'Bu sınava girmek için eğitime kayıtlı olmalı ve ödemeni tamamlamış olmalısın',
+            details: 'Eğitim kaydı veya ödeme bulunamadı'
+          },
+          { status: 403 }
+        )
+      }
+
+      // Daha önce bu sınava girmiş mi kontrol et
+      const existingResult = await prisma.examResult.findUnique({
+        where: {
+          examId_personId: {
+            examId: exam.id,
+            personId: person.id
+          }
+        }
+      })
+
+      if (existingResult) {
+        return NextResponse.json(
+          { error: 'Bu sınavı daha önce tamamladınız' },
+          { status: 403 }
+        )
+      }
     }
 
     return NextResponse.json({
