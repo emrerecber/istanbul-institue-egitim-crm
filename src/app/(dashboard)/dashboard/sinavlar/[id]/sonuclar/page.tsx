@@ -51,8 +51,8 @@ export default function ExamResultsPage() {
       const examRes = await fetch(`/api/exams/${examId}`)
       const examData = await examRes.json()
 
-      if (examData.success) {
-        setExam(examData.data)
+      if (examRes.ok && !examData.error) {
+        setExam(examData)
       }
 
       // Sonuçları yükle
