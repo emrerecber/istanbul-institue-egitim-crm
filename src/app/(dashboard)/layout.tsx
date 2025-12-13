@@ -1,11 +1,32 @@
+'use client'
+
 import { ReactNode } from 'react'
+import { useSession, signOut } from 'next-auth/react'
 import Breadcrumb from '@/components/Breadcrumb'
+
+const roleLabels: Record<string, string> = {
+  SUPER_ADMIN: 'Süper Admin',
+  ADMIN: 'Admin',
+  MANAGER: 'Yönetici',
+  USER: 'Kullanıcı',
+  INSTRUCTOR: 'Eğitmen',
+}
+
+const roleColors: Record<string, string> = {
+  SUPER_ADMIN: 'bg-purple-100 text-purple-800',
+  ADMIN: 'bg-red-100 text-red-800',
+  MANAGER: 'bg-blue-100 text-blue-800',
+  USER: 'bg-gray-100 text-gray-800',
+  INSTRUCTOR: 'bg-green-100 text-green-800',
+}
 
 export default function DashboardLayout({
   children,
 }: {
   children: ReactNode
 }) {
+  const { data: session } = useSession()
+  
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Sidebar */}
@@ -62,12 +83,31 @@ export default function DashboardLayout({
             <h2 className="text-xl font-semibold">Dashboard</h2>
             <div className="flex items-center gap-4">
               <button className="text-gray-600 hover:text-gray-900">🔔</button>
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
-                  👤
+              
+              {/* User Profile */}
+              <div className="flex items-center gap-3 border-l pl-4">
+                <div className="text-right">
+                  <div className="text-sm font-medium text-gray-900">
+                    {session?.user?.name || session?.user?.email}
+                  </div>
+                  {session?.user?.role && (
+                    <span className={`text-xs px-2 py-0.5 rounded-full ${roleColors[session.user.role]}`}>
+                      {roleLabels[session.user.role]}
+                    </span>
+                  )}
                 </div>
-                <span className="text-sm font-medium">Admin</span>
+                <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-medium">
+                  {session?.user?.name?.[0]?.toUpperCase() || session?.user?.email?.[0]?.toUpperCase() || '?'}
+                </div>
               </div>
+              
+              {/* Logout Button */}
+              <button
+                onClick={() => signOut({ callbackUrl: '/login' })}
+                className="px-4 py-2 text-sm font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition"
+              >
+                Çıkış Yap
+              </button>
             </div>
           </div>
         </header>
